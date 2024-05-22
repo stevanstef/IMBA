@@ -20,84 +20,29 @@ public class IMBA extends Frame {
 		DeleteRating dr = new DeleteRating();
 		KeyInput ki = new KeyInput();
 		AddRating nr = new AddRating();*/
-      
-      public IMBA() { // constructor lo prepare window size and menubar
-			setVisible(true);
-			setLayout(new FlowLayout(FlowLayout.CENTER, 5, 440));
-			setTitle("IMBA");
-			resize(960, 540);
-			loginMenu();
-			show();
-      }// end constructor
 		
-		public void loginMenu(){ 
-   	 	JButton btn1 = new JButton("Enter");  
-			add(btn1);}
-			
-  /* public boolean action(Event evt, Object obj) {// Activate menuitem
-         if(evt.target instanceof MenuItem) {
-            String label = (String) obj;
-         if (label.equals("Quit"))
-            System.exit(0); // quit window
-            
-         else if (label.equals("Load") ){
-            System.out.println("Load coming up !");
-            rows = rd.readFile(fileName, 10);
-            info = re.getRecords(rows);}
-         else if (label.equals("List") ){
-            System.out.println("List coming up !");}
-         else if (label.equals("New"))
-            System.out.println("New coming up !" );
-         else if (label.equals("Delete")){
-            System.out.println("Delete coming up !" );
-				si2.keyInput(fileName, info, item);}
-         else if (label.equals("Print") )
-            System.out.println("Print coming up !" );
-         else if (label.equals("Names")){
-            System.out.println("Names coming up !");
-            info = s.sort(info, 0);}
-         else if (label.equals("IDs")){
-            System.out.println("IDs coming up !");
-				info = s.sort(info, 1);}
-         else if (label.equals("Homeforms")){
-            System.out.println("Homeforms coming up !");
-				info = s.sort(info, 2);}
-         else if (label.equals("Periods")){
-            System.out.println("Periods coming up !");
-				info = s.sort(info, 5);}
-            
-            
-         else if (label.equals("By Names")){
-            System.out.println("By Names coming up !");
-				si.keyInput(fileName, info, 0);}
-         else if (label.equals("By IDs"))
-            System.out.println("By IDs coming up !");      
-         else if (label.equals("By Homeforms"))
-            System.out.println("By Homeforms coming up !");
-         else if (label.equals("By Periods"))
-            System.out.println("By Periods coming up !");
-            
-         else if (label.equals("Help")){
-            System.out.println("Help coming up !");
-				System.out.println("\n(1) Select Load from Data menu first.");
-				System.out.println("\n(2) Select any menu item.");
-				System.out.println("\n(3) Select List from Data to view results.");}
-         }
-         return true;
-   }//end action*/
-
-   
-   public void paint(Graphics g) {
+		public void paint(Graphics g) {
          Toolkit tk = Toolkit.getDefaultToolkit();
          Image img = tk.getImage("Background.png");
          g.drawImage(img, 0, 30, this);     
     }//end paint
-
-
-   
-   
-   public static void main(String str[]){
-         new IMBA();// Instantiates LTS class
-         } //end main
-   }//end class   
+      
+      public IMBA() { // constructor lo prepare window size and menubar
+			btn1 = new JButton("Enter");  
+			add(btn1);			
+			setVisible(true);
+			setLayout(new FlowLayout(FlowLayout.CENTER, 5, 440));
+			setTitle("IMBA");
+			resize(960, 540);
+       	button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                // Insert code here
+            }
+        });
+      }// end constructor
+		
+   	public static void main(String str[]){
+         	new IMBA();// Instantiates LTS class
+         	} //end main
+}//end class   
 
