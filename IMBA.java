@@ -10,10 +10,8 @@ public class IMBA extends Frame {
       //Declare variables and constants
 		private JButton btn1;
       static String movieFile = "movieList.txt";      //movieFile = "movieList.txt"
-		static String ratingFile = "ratingList.txt";      //ratingFile = "ratingList.txt"
       final int MAX = 40;                        //Set MAX number opf records
       String[][] movieArray = new String[40][40]; 
-		String[][] ratingArray = new String[40][40];
       /*ReadData rd = new ReadData();
       Records raRe = new Records();                
 		Records moRe = new Records();
@@ -24,13 +22,18 @@ public class IMBA extends Frame {
 		AddRating nr = new AddRating();*/
       
       public IMBA() { // constructor lo prepare window size and menubar
-		   btn1 = new JButton("Enter");
-			setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
-			add(btn1);
-			setTitle("IMBA");
-			setSize(960, 540);
 			setVisible(true);
+			setLayout(new FlowLayout(FlowLayout.CENTER, 5, 440));
+			setTitle("IMBA");
+			resize(960, 540);
+			loginMenu();
+			show();
       }// end constructor
+		
+		public void loginMenu(){ 
+   	 	JButton btn1 = new JButton("Enter");  
+			add(btn1);}
+			
   /* public boolean action(Event evt, Object obj) {// Activate menuitem
          if(evt.target instanceof MenuItem) {
             String label = (String) obj;
