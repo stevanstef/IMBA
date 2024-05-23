@@ -10,7 +10,7 @@ import javax.swing.border.Border;
 public class IMBA extends JFrame {
 
     // Declare variables and constants
-    private JButton enter, search, sort, select;
+    private JButton enter, search, sort, select, dMovie, aMovie;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
     final int MAX = 40; // Set MAX number of records
     String[] rows = new String[MAX];
@@ -33,6 +33,8 @@ public class IMBA extends JFrame {
         select.setVisible(true);
         sort.setVisible(true);
         search.setVisible(true);
+	aMovie.setVisible(true);
+        dMovie.setVisible(true);
 		  
 		  JPanel lib = new JPanel();
 	 	  GridBagConstraints gbc = new GridBagConstraints();
@@ -45,6 +47,16 @@ public class IMBA extends JFrame {
 		  rows = rd.readFile(movieFile, 30);
         info = re.getRecords(rows, lib);
    }
+    private void addRun(){
+        enter.setVisible(false);
+        select.setVisible(false);
+        sort.setVisible(false);
+        search.setVisible(false);
+        aMovie.setVisible(false);
+        dMovie.setVisible(false);
+
+
+    }
 
     private void buttons() {
         setLayout(new GridBagLayout());
@@ -84,6 +96,27 @@ public class IMBA extends JFrame {
         });
         sort.setVisible(false);
 
+	
+        aMovie = new JButton("Add Movie");
+        aMovie.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed when the button is clicked
+                addRun();
+            }
+        });
+        aMovie.setVisible(false);
+
+        dMovie = new JButton("Delete Movie");
+        dMovie.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed when the button is clicked
+                libraryRun();
+            }
+        });
+        dMovie.setVisible(false);
+
+
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -92,7 +125,7 @@ public class IMBA extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(400, 1, 1, 400);
+        gbc.insets = new Insets(400, 1, 1, 800);
         add(select, gbc);
 
         gbc.gridx = 1;
@@ -104,6 +137,17 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(1, 1, 430, 650);
         add(sort, gbc);
+
+	
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(400, 1, 1, 600);
+        add(aMovie, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(400, 1, 1, 390);
+        add(dMovie, gbc);
     } // end makeMenus
 
     public static void main(String[] args) {
