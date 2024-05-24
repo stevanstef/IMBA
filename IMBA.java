@@ -19,8 +19,9 @@ public class IMBA extends JFrame {
 
     // Declare variables and constants
     private JButton enter, search, sort, select, dMovie, aMovie, back;
-    private JPanel lib;
+    public JPanel lib, desc;
     private JTextArea textArea;
+	 private JTextField questionNoTextField, questionTextField, option1TextField, option2TextField, option3TextField, answerTextField, option4TextField;
     public int start, end;
     public String[][] store;
     String input;
@@ -172,10 +173,47 @@ public class IMBA extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
                 addRun();
-            }
-        });
-        aMovie.setVisible(false);
+					 GridBagConstraints gbc = new GridBagConstraints();
+	 				 gbc.gridx = 1;
+    				 gbc.gridy = 0;
+    				 gbc.insets = new Insets(150, 200, 200, 200);
+					 desc = new JPanel();
+					 add(desc, gbc);
+	    			 desc.setVisible(true);
+					 int componentWidth = 400;
+       			 int componentHeight = 25;
+       			 int componentX = 50;
+        			 int componentY = 20;
+       			 int componentSpacing = 30;
+					 JLabel questionNoLabel = new JLabel("Name:");
+        			 questionNoLabel.setBounds(componentX, componentY, 100, componentHeight);
+        			 questionNoLabel.setForeground(Color.BLACK);
+       			 desc.add(questionNoLabel, Integer.valueOf(1));
 
+        			 questionNoTextField = new JTextField();
+        		 	 questionNoTextField.setBounds(componentX + 100, componentY, 35, componentHeight);
+        			 desc.add(questionNoTextField, Integer.valueOf(1));
+
+           		 JLabel questionLabel = new JLabel("Year released:");
+        			 questionLabel.setBounds(componentX, componentY + componentSpacing, 100, componentHeight);
+        			 questionLabel.setForeground(Color.BLACK);
+       			 desc.add(questionLabel, Integer.valueOf(1));
+
+       			 questionTextField = new JTextField();
+        			 questionTextField.setBounds(componentX + 100, componentY + componentSpacing, componentWidth, componentHeight);
+       			 desc.add(questionTextField, Integer.valueOf(1));
+
+                JLabel option1Label = new JLabel("Genre:");
+        		    option1Label.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
+        			 option1Label.setForeground(Color.BLACK);
+        			 desc.add(option1Label, Integer.valueOf(1));
+
+        			 option1TextField = new JTextField();
+        		    option1TextField.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
+        			 desc.add(option1TextField, Integer.valueOf(1));
+		  }});
+
+        aMovie.setVisible(false);
         dMovie = new JButton("Delete Movie");
         dMovie.setVisible(false);
 
