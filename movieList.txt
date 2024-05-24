@@ -1,30 +1,20 @@
-Rush Hour | 1998 | Comedy  
-Kung Fu Panda | 2008 | Family  
-Jurassic Park | 1993 | Action  
-
-Up | 2009 | Family  
-Inception | 2010 | Action  
-Interstellar | 2014 | Sci-Fi  
-Oppenheimer | 2023 | Drama  
-Pulp Fiction | 1994 | Action  
-Dune Part Two | 2024 | Sci-Fi  
-The Matrix | 1999 | Sci-Fi  
-Fight Club | 1999 | Drama  
-Shrek | 2001 | Family  
-Rio | 2011 | Family  
-Avengers: Endgame | 2019 | Action  
-Harry Potter and the Philosopher's Stone | 2001 | Fantasy  
-
-Akira | 1988 | Anime  
-Spirited Away | 2001 | Anime  
-Your Name | 2016 | Anime  
-
-
-
-
-
-
-
-
-
-
+Rush Hour | 1998 | Comedy
+Kung Fu Panda | 2008 | Family
+Jurassic Park | 1993 | Action
+The Lord of the Rings: The Return of the King | 2003 | Adventure
+Up | 2009 | Family
+Inception | 2010 | Action
+Interstellar | 2014 | Sci-Fi
+Oppenheimer | 2023 | Drama
+Pulp Fiction | 1994 | Action
+Dune Part Two | 2024 | Sci-Fi
+The Matrix | 1999 | Sci-Fi
+Fight Club | 1999 | Drama
+Shrek | 2001 | Family
+Rio | 2011 | Family
+Avengers: Endgame | 2019 | Action
+Harry Potter and the Philosopher's Stone | 2001 | Fantasy
+Planet Earth | 2006 | Documentary
+Akira | 1988 | Anime
+Spirited Away | 2001 | Anime
+Your Name | 2016 | Anime
