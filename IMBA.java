@@ -18,12 +18,10 @@ import javax.swing.text.Utilities;
 public class IMBA extends JFrame {
 
     // Declare variables and constants
-    private JButton enter, search, sort, select, dMovie, aMovie, back;
-    public JPanel lib, desc;
-    private JTextArea textArea;
-	 private JTextField questionNoTextField, questionTextField, option1TextField, option2TextField, option3TextField, answerTextField, option4TextField;
+    private JButton enter, search, sort, select, dMovie, aMovie, back, save;
+    public JPanel lib, add, desc;
+	private JTextField nameText, yearText, genreText;
     public int start, end;
-    public String[][] store;
     String input;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
     final int MAX = 40; // Set MAX number of records
@@ -115,8 +113,68 @@ public class IMBA extends JFrame {
         back.setVisible(true);
     }
 
+    private void selectRun(){
+        enter.setVisible(false);
+        select.setVisible(false);
+        sort.setVisible(false);
+        search.setVisible(false);
+        aMovie.setVisible(false);
+        dMovie.setVisible(false);
+        lib.setVisible(false);
+        back.setVisible(true);
+	 	GridBagConstraints gbc = new GridBagConstraints();
+	 	gbc.gridx = 1;
+    	gbc.gridy = 0;
+    	gbc.insets = new Insets(150, 200, 200, 200);
+	 	add(desc, gbc);
+        desc.setVisible(true);
+        JTextArea description = new JTextArea();
+        description.setSelectionColor(Color.RED);
+        description.setFont(new Font("Serif", Font.PLAIN, 16));
+        description.setLineWrap(true);
+        description.setWrapStyleWord(true);
+        description.setEditable(false);
+        description.setPreferredSize( new Dimension( 800, 100000));
+        desc.add(description);
+    }
+
+
     private void buttons() {
         setLayout(new GridBagLayout());
+        desc = new JPanel();
+        add = new JPanel();
+        int componentWidth = 400;
+        int componentHeight = 25;
+        int componentX = 50;
+        int componentY = 20;
+        int componentSpacing = 30;
+        JLabel name = new JLabel("Name:");
+        name.setBounds(componentX, componentY, 100, componentHeight);
+        name.setForeground(Color.BLACK);
+        add.add(name, Integer.valueOf(1));
+
+        nameText = new JTextField(10);
+        nameText.setBounds(componentX + 100, componentY, 35, componentHeight);
+        add.add(nameText, Integer.valueOf(1));
+
+        JLabel year = new JLabel("Year released:");
+        year.setBounds(componentX, componentY + componentSpacing, 100, componentHeight);
+        year.setForeground(Color.BLACK);
+        add.add(year, Integer.valueOf(1));
+
+        yearText = new JTextField(10);
+        yearText.setBounds(componentX + 100, componentY + componentSpacing, componentWidth, componentHeight);
+        add.add(yearText, Integer.valueOf(1));
+
+        JLabel genre = new JLabel("Genre:");
+        genre.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
+        genre.setForeground(Color.BLACK);
+        add.add(genre, Integer.valueOf(1));
+
+        genreText = new JTextField(10);
+        genreText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
+        add.add(genreText, Integer.valueOf(1));
+
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -132,28 +190,28 @@ public class IMBA extends JFrame {
                 if (check != 0)
                 {
                     check = 0;
-                    System.out.println("Movie Selected");
+                    selectRun();
                 }
                 
             }
         });
         select.setVisible(false);
 
-        back = new JButton("Back");
-        back.addActionListener(new ActionListener() {
+        save = new JButton("Save");
+        save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                back.setVisible(false);
-                libraryRun();
-                
+                nameText.setText("");
+                yearText.setText("");
+                genreText.setText("");
             }
         });
-        back.setVisible(false);
+        save.setVisible(false);
 
         search = new JButton("Search");
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
-                
+                System.out.println("Search still under development");
             }
         });
         search.setVisible(false);
@@ -162,7 +220,7 @@ public class IMBA extends JFrame {
         sort.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
-                
+                System.out.println("Sort still under development");
             }
         });
         sort.setVisible(false);
@@ -173,46 +231,31 @@ public class IMBA extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
                 addRun();
-					 GridBagConstraints gbc = new GridBagConstraints();
-	 				 gbc.gridx = 1;
-    				 gbc.gridy = 0;
-    				 gbc.insets = new Insets(150, 200, 200, 200);
-					 desc = new JPanel();
-					 add(desc, gbc);
-	    			 desc.setVisible(true);
-					 int componentWidth = 400;
-       			 int componentHeight = 25;
-       			 int componentX = 50;
-        			 int componentY = 20;
-       			 int componentSpacing = 30;
-					 JLabel questionNoLabel = new JLabel("Name:");
-        			 questionNoLabel.setBounds(componentX, componentY, 100, componentHeight);
-        			 questionNoLabel.setForeground(Color.BLACK);
-       			 desc.add(questionNoLabel, Integer.valueOf(1));
-
-        			 questionNoTextField = new JTextField();
-        		 	 questionNoTextField.setBounds(componentX + 100, componentY, 35, componentHeight);
-        			 desc.add(questionNoTextField, Integer.valueOf(1));
-
-           		 JLabel questionLabel = new JLabel("Year released:");
-        			 questionLabel.setBounds(componentX, componentY + componentSpacing, 100, componentHeight);
-        			 questionLabel.setForeground(Color.BLACK);
-       			 desc.add(questionLabel, Integer.valueOf(1));
-
-       			 questionTextField = new JTextField();
-        			 questionTextField.setBounds(componentX + 100, componentY + componentSpacing, componentWidth, componentHeight);
-       			 desc.add(questionTextField, Integer.valueOf(1));
-
-                JLabel option1Label = new JLabel("Genre:");
-        		    option1Label.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
-        			 option1Label.setForeground(Color.BLACK);
-        			 desc.add(option1Label, Integer.valueOf(1));
-
-        			 option1TextField = new JTextField();
-        		    option1TextField.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
-        			 desc.add(option1TextField, Integer.valueOf(1));
+				GridBagConstraints gbc = new GridBagConstraints();
+	 			gbc.gridx = 1;
+    			gbc.gridy = 0;
+    			gbc.insets = new Insets(150, 200, 200, 200);
+				add(add, gbc);
+	    		add.setVisible(true);
+                nameText.setText("");
+                yearText.setText("");
+                genreText.setText("");
+                save.setVisible(true);
 		  }});
-
+        
+        back = new JButton("Back");
+        back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                add.setVisible(false);
+                back.setVisible(false);
+                desc.setVisible(false);
+                save.setVisible(false);
+                libraryRun();
+                  
+            }
+        });
+        back.setVisible(false);
+        
         aMovie.setVisible(false);
         dMovie = new JButton("Delete Movie");
         dMovie.setVisible(false);
@@ -227,6 +270,11 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(400, 1, 1, 800);
         add(select, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(30, 1, 1, 1);
+        add(save, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
