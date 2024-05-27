@@ -21,6 +21,7 @@ public class IMBA extends JFrame {
     private JButton enter, search, sort, select, dMovie, aMovie, back, save;
     public JPanel lib, add, desc;
 	private JTextField nameText, yearText, genreText;
+	 public JTextArea textArea;
     public int start, end;
     String input;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
@@ -31,6 +32,7 @@ public class IMBA extends JFrame {
 	ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
+	 AddRecord ar = new AddRecord();
 
     public IMBA() { // constructor to prepare window size and menubar
       BackgroundPanel bgPanel = new BackgroundPanel("background.png");
@@ -47,7 +49,7 @@ public class IMBA extends JFrame {
         select.setVisible(true);
         sort.setVisible(true);
         search.setVisible(true);
-	    aMovie.setVisible(true);
+	     aMovie.setVisible(true);
         dMovie.setVisible(true);
 		  
 		lib = new JPanel();
@@ -57,7 +59,7 @@ public class IMBA extends JFrame {
     	gbc.insets = new Insets(150, 200, 200, 200);
 	 	add(lib, gbc);
 	    lib.setVisible(true);
-        JTextArea textArea = new JTextArea();
+        textArea = new JTextArea();
         textArea.setSelectionColor(Color.RED);
         textArea.setFont(new Font("Serif", Font.PLAIN, 16));
         textArea.setLineWrap(true);
@@ -68,7 +70,7 @@ public class IMBA extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(500, 141));
+		  scrollPane.setPreferredSize(new Dimension(500, 141));
         lib.add(scrollPane);
 
         rows = rd.readFile(movieFile, 30);
@@ -89,7 +91,7 @@ public class IMBA extends JFrame {
                             if (check != 0)
                             {
                                 check = 0;
-                                textArea.replaceRange("", start, end);
+                                textArea.replaceRange(" ", start, end);
                                 ur.updateFile(movieFile, textArea);
                             }
                             
@@ -200,6 +202,11 @@ public class IMBA extends JFrame {
         save = new JButton("Save");
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+				  	 String nameT = nameText.getText();
+					 String yearT = yearText.getText();
+					 String genreT = genreText.getText();
+					 info = ar.aRecord(rows, nameT, yearT, genreT, textArea);
+					 
                 nameText.setText("");
                 yearText.setText("");
                 genreText.setText("");
@@ -241,6 +248,7 @@ public class IMBA extends JFrame {
                 yearText.setText("");
                 genreText.setText("");
                 save.setVisible(true);
+					 
 		  }});
         
         back = new JButton("Back");
