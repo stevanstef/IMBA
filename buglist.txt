@@ -1,4 +1,0 @@
-1. Scroll bar too low
-2. Spaces left after movie deleted
-3. Increasing amount of spaces after movie name after each deletion and reboot
-4. || appearing in textArea after addMovie selected
