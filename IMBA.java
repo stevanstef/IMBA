@@ -7,13 +7,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.DataInput;
 import java.io.DataInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.text.Utilities;
+import javax.swing.text.Utilities; 
+import java.awt.event.*;
+import javax.swing.table.*;
 
 public class IMBA extends JFrame {
 
@@ -21,18 +24,18 @@ public class IMBA extends JFrame {
     private JButton enter, search, sort, select, dMovie, aMovie, back, save;
     public JPanel lib, add, desc;
 	private JTextField nameText, yearText, genreText;
-	 public JTextArea textArea;
-    public int start, end;
-    String input;
+	public JTable table;
+    public DefaultTableModel model;
+    public int start, end, MAX;
+    String input, value;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
-    final int MAX = 40; // Set MAX number of records
+
     int check = 0;
     String[] rows = new String[MAX];
 	String info [][] = new String[MAX][6];
 	ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
-	 AddRecord ar = new AddRecord();
 
     public IMBA() { // constructor to prepare window size and menubar
       BackgroundPanel bgPanel = new BackgroundPanel("background.png");
@@ -49,9 +52,19 @@ public class IMBA extends JFrame {
         select.setVisible(true);
         sort.setVisible(true);
         search.setVisible(true);
-	     aMovie.setVisible(true);
+	    aMovie.setVisible(true);
         dMovie.setVisible(true);
-		  
+		
+        MAX = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(movieFile))) {
+            while (reader.readLine() != null) {
+                MAX++;
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 		lib = new JPanel();
 	 	GridBagConstraints gbc = new GridBagConstraints();
 	 	gbc.gridx = 1;
@@ -59,40 +72,57 @@ public class IMBA extends JFrame {
     	gbc.insets = new Insets(150, 200, 200, 200);
 	 	add(lib, gbc);
 	    lib.setVisible(true);
-        textArea = new JTextArea();
-        textArea.setSelectionColor(Color.RED);
-        textArea.setFont(new Font("Serif", Font.PLAIN, 16));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setPreferredSize( new Dimension( 3600, 800));
-        lib.add(textArea);
+        
+        rows = rd.readFile(movieFile, MAX);
+        info = re.getRecords(rows);
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        String[] columnNames = {"Title", "Year", "Genre"};
+        String[][] data = new String[rows.length][3];
+        for (int i = 0; i < rows.length; i++) {
+            if (rows[i] != null) {
+                String[] parts = rows[i].split(" \\| ");
+                data[i][0] = parts[0];
+                data[i][1] = parts[1];
+                data[i][2] = parts[2];
+            }
+        }
+
+        model = new DefaultTableModel(data, columnNames);
+        table = new JTable(model);
+        table.setDefaultEditor(Object.class, null);
+        table.setFont(new Font("Serif", Font.PLAIN, 16));
+        lib.add(table);
+
+        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		  scrollPane.setPreferredSize(new Dimension(500, 141));
+		scrollPane.setPreferredSize(new Dimension(500, 141));
         lib.add(scrollPane);
 
-        rows = rd.readFile(movieFile, 30);
-        info = re.getRecords(rows, textArea);
-
-        textArea.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
                     check = 1;
-                    int clickOffset = textArea.viewToModel2D(e.getPoint());
-                    start = Utilities.getRowStart(textArea, clickOffset);
-                    end = Utilities.getRowEnd(textArea, clickOffset);
-                    textArea.setSelectionStart(start);
-                    textArea.setSelectionEnd(end);
                     dMovie.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             if (check != 0)
                             {
                                 check = 0;
-                                textArea.replaceRange(" ", start, end);
-                                ur.updateFile(movieFile, textArea);
+                                int row = table.getSelectedRow();
+                                model.removeRow(row);
+                                rows = rd.readFile(movieFile, 20);
+                                info = re.getRecords(rows);
+                                ur.updateFile(movieFile, model);
+
+                                String[][] data = new String[rows.length][3];
+                                for (int i = 0; i < rows.length; i++) {
+                                    if (rows[i] != null) {
+                                        String[] parts = rows[i].split(" \\| ");
+                                        data[i][0] = parts[0];
+                                        data[i][1] = parts[1];
+                                        data[i][2] = parts[2];
+                                    }
+                                }
                             }
                             
                         }
@@ -193,6 +223,73 @@ public class IMBA extends JFrame {
                 {
                     check = 0;
                     selectRun();
+                    int row = table.getSelectedRow();
+                    int column = 0;
+                    value = table.getModel().getValueAt(row, column).toString();
+                    value.trim();
+                    if (value.contains("Rush Hour")){
+                        System.out.println("Display Rush Hour");
+                    }
+                    else if (value.contains("Kung Fu Panda")){
+                        System.out.println("Display Kung Fu Panda");
+                    }
+                    else if (value.contains("Jurassic Park")){
+                        System.out.println("Display Jurassic Park");
+                    }
+                    else if (value.contains("The Lord of the Rings: The Return of the King")){
+                        System.out.println("Display The Lord of the Rings: The Return of the King");
+                    }
+                    else if (value.contains("Up")){
+                        System.out.println("Display Up");
+                    }
+                    else if (value.contains("Inception")){
+                        System.out.println("Display Inception");
+                    }
+                    else if (value.contains("Interstellar")){
+                        System.out.println("Display Interstellar");
+                    }
+                    else if (value.contains("Oppenheimer")){
+                        System.out.println("Display Oppenheimer");
+                    }
+                    else if (value.contains("Pulp Fiction")){
+                        System.out.println("Display Pulp Fiction");
+                    }
+                    else if (value.contains("Dune Part Two")){
+                        System.out.println("Display Dune Part Two");
+                    }
+                    else if (value.contains("The Matrix")){
+                        System.out.println("Display The Matrix");
+                    }
+                    else if (value.contains("Fight Club")){
+                        System.out.println("Display Fight Club");
+                    }
+                    else if (value.contains("Shrek")){
+                        System.out.println("Display Shrek");
+                    }
+                    else if (value.contains("Rio")){
+                        System.out.println("Display Rio");
+                    }
+                    else if (value.contains("Avengers: Endgame")){
+                        System.out.println("Display Avengers: Endgame");
+                    }
+                    else if (value.contains("Harry Potter and the Philosopher's Stone")){
+                        System.out.println("Display Harry Potter and the Philosopher's Stone");
+                    }
+                    else if (value.contains("Planet Earth")){
+                        System.out.println("Display Planet Earth");
+                    }
+                    else if (value.contains("Akira")){
+                        System.out.println("Display Akira");
+                    }
+                    else if (value.contains("Spirited Away")){
+                        System.out.println("Display Spirited Away");
+                    }
+                    else if (value.contains("Your Name")){
+                        System.out.println("Display Your Name");
+                    }
+                    else{
+                        System.out.println("Display Generic Movie");
+                    }
                 }
                 
             }
@@ -202,10 +299,15 @@ public class IMBA extends JFrame {
         save = new JButton("Save");
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				  	 String nameT = nameText.getText();
-					 String yearT = yearText.getText();
-					 String genreT = genreText.getText();
-					 info = ar.aRecord(rows, nameT, yearT, genreT, textArea);
+				String nameT = nameText.getText();
+				String yearT = yearText.getText();
+				String genreT = genreText.getText();
+                String inputText[] = new String[3];
+                inputText[0] = nameT;
+                inputText[1] = yearT;
+                inputText[2] = genreT;
+                model.addRow(inputText);
+                ur.updateFile(movieFile, model);
 					 
                 nameText.setText("");
                 yearText.setText("");
@@ -244,9 +346,6 @@ public class IMBA extends JFrame {
     			gbc.insets = new Insets(150, 200, 200, 200);
 				add(add, gbc);
 	    		add.setVisible(true);
-                nameText.setText("");
-                yearText.setText("");
-                genreText.setText("");
                 save.setVisible(true);
 					 
 		  }});

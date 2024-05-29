@@ -12,7 +12,7 @@ class Records //seperates a line of records into 6 parts
   * @param data[]
   * @return String[][]
   */
- public String[][] getRecords(String data[], JTextArea d)
+ public String[][] getRecords(String data[])
  {
   int n  = data.length;
   String records[][] = new String[n][6]; //stores records in a 2d array
@@ -26,10 +26,8 @@ class Records //seperates a line of records into 6 parts
    while(st.hasMoreTokens()&& i<6)
    {
         records[line][i] = st.nextToken(); //store each item of record
-        d.append(records[line][i] + " ");
         i++;
    }//end while
-   d.append("\n");
   }//end for
   return records; //return 2d array records
  } //end getRecords
