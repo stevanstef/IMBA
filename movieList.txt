@@ -1,20 +1,20 @@
-Rush Hour | 1998 | Comedy
-Kung Fu Panda | 2008 | Family
-Jurassic Park | 1993 | Action
-The Lord of the Rings: The Return of the King | 2003 | Adventure
-Up | 2009 | Family
-Inception | 2010 | Action
-Interstellar | 2014 | Sci-Fi
-Oppenheimer | 2023 | Drama
-Pulp Fiction | 1994 | Action
-Dune Part Two | 2024 | Sci-Fi
-The Matrix | 1999 | Sci-Fi
-Fight Club | 1999 | Drama
-Shrek | 2001 | Family
-Rio | 2011 | Family
-Avengers: Endgame | 2019 | Action
-Harry Potter and the Philosopher's Stone | 2001 | Fantasy
-Planet Earth | 2006 | Documentary
-Akira | 1988 | Anime
-Spirited Away | 2001 | Anime
-Your Name | 2016 | Anime
+Rush Hour | 1998 | Comedy | 7/10
+Kung Fu Panda | 2008 | Family | 7.6/10
+Jurassic Park | 1993 | Action | 8.2/10
+The Lord of the Rings: The Return of the King | 2003 | Adventure | 9/10
+Up | 2009 | Family | 8.3/10
+Inception | 2010 | Action | 8.8/10
+Interstellar | 2014 | Sci-Fi | 8.7/10
+Oppenheimer | 2023 | Drama | 8.3/10
+Pulp Fiction | 1994 | Action | 8.9/10
+Dune Part Two | 2024 | Sci-Fi | 8.6/10
+The Matrix | 1999 | Sci-Fi | 8.7/10
+Fight Club | 1999 | Drama | 8.8/10
+Shrek | 2001 | Family | 7.9/10
+Rio | 2011 | Family | 6.9/10
+Avengers: Endgame | 2019 | Action | 8.4/10
+Harry Potter and the Philosopher's Stone | 2001 | Fantasy | 7.6/10
+Planet Earth | 2006 | Documentary | 9.4/10
+Akira | 1988 | Anime | 8/10
+Spirited Away | 2001 | Anime | 8.6/10
+Your Name | 2016 | Anime | 8.4/10

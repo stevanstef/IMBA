@@ -23,7 +23,7 @@ public class IMBA extends JFrame {
     // Declare variables and constants
     private JButton enter, search, sort, select, dMovie, aMovie, back, save;
     public JPanel lib, add, desc;
-	private JTextField nameText, yearText, genreText;
+	private JTextField nameText, yearText, genreText, ratingText;
 	public JTable table;
     public DefaultTableModel model;
     public int start, end, MAX;
@@ -76,14 +76,15 @@ public class IMBA extends JFrame {
         rows = rd.readFile(movieFile, MAX);
         info = re.getRecords(rows);
 
-        String[] columnNames = {"Title", "Year", "Genre"};
-        String[][] data = new String[rows.length][3];
+        String[] columnNames = {"Title", "Year", "Genre", "Rating"};
+        String[][] data = new String[rows.length][4];
         for (int i = 0; i < rows.length; i++) {
             if (rows[i] != null) {
                 String[] parts = rows[i].split(" \\| ");
                 data[i][0] = parts[0];
                 data[i][1] = parts[1];
                 data[i][2] = parts[2];
+					 data[i][3] = parts[3];
             }
         }
 
@@ -114,13 +115,14 @@ public class IMBA extends JFrame {
                                 info = re.getRecords(rows);
                                 ur.updateFile(movieFile, model);
 
-                                String[][] data = new String[rows.length][3];
+                                String[][] data = new String[rows.length][4];
                                 for (int i = 0; i < rows.length; i++) {
                                     if (rows[i] != null) {
                                         String[] parts = rows[i].split(" \\| ");
                                         data[i][0] = parts[0];
                                         data[i][1] = parts[1];
                                         data[i][2] = parts[2];
+													 data[i][3] = parts[3];
                                     }
                                 }
                             }
@@ -180,7 +182,7 @@ public class IMBA extends JFrame {
         int componentX = 50;
         int componentY = 20;
         int componentSpacing = 30;
-        JLabel name = new JLabel("Name:");
+        JLabel name = new JLabel("Title:");
         name.setBounds(componentX, componentY, 100, componentHeight);
         name.setForeground(Color.BLACK);
         add.add(name, Integer.valueOf(1));
@@ -189,7 +191,7 @@ public class IMBA extends JFrame {
         nameText.setBounds(componentX + 100, componentY, 35, componentHeight);
         add.add(nameText, Integer.valueOf(1));
 
-        JLabel year = new JLabel("Year released:");
+        JLabel year = new JLabel("Year:");
         year.setBounds(componentX, componentY + componentSpacing, 100, componentHeight);
         year.setForeground(Color.BLACK);
         add.add(year, Integer.valueOf(1));
@@ -206,6 +208,15 @@ public class IMBA extends JFrame {
         genreText = new JTextField(10);
         genreText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
         add.add(genreText, Integer.valueOf(1));
+		  
+		  JLabel rating = new JLabel("Rating:");
+        rating.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
+        rating.setForeground(Color.BLACK);
+        add.add(rating, Integer.valueOf(1));
+
+        ratingText = new JTextField(10);
+        ratingText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
+        add.add(ratingText, Integer.valueOf(1));
 
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
@@ -302,16 +313,22 @@ public class IMBA extends JFrame {
 				String nameT = nameText.getText();
 				String yearT = yearText.getText();
 				String genreT = genreText.getText();
-                String inputText[] = new String[3];
+				String ratingT = ratingText.getText();
+				String inputText[] = new String[4];
+				if (inputText == null){
                 inputText[0] = nameT;
                 inputText[1] = yearT;
                 inputText[2] = genreT;
+					 inputText[3] = ratingT;
                 model.addRow(inputText);
                 ur.updateFile(movieFile, model);
 					 
-                nameText.setText("");
+				}
+				    nameText.setText("");
                 yearText.setText("");
                 genreText.setText("");
+					 ratingText.setText("");
+
             }
         });
         save.setVisible(false);
