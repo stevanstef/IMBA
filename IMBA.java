@@ -21,13 +21,16 @@ import javax.swing.table.*;
 public class IMBA extends JFrame {
 
     // Declare variables and constants
-    private JButton enter, search, sort, select, dMovie, aMovie, back, save;
+    private JButton enter, search, sort, select, dMovie, aMovie, back, save, y, n;
     public JPanel lib, add, desc;
+    public JFrame yn;
 	private JTextField nameText, yearText, genreText, ratingText;
 	public JTable table;
+    public JLabel message, ynText;
     public DefaultTableModel model;
     public int start, end, MAX;
     String input, value;
+    boolean isNull;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
 
     int check = 0;
@@ -36,6 +39,7 @@ public class IMBA extends JFrame {
 	ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
+    DisplayMovie dm = new DisplayMovie();
 
     public IMBA() { // constructor to prepare window size and menubar
       BackgroundPanel bgPanel = new BackgroundPanel("background.png");
@@ -84,7 +88,7 @@ public class IMBA extends JFrame {
                 data[i][0] = parts[0];
                 data[i][1] = parts[1];
                 data[i][2] = parts[2];
-					 data[i][3] = parts[3];
+				data[i][3] = parts[3];
             }
         }
 
@@ -109,22 +113,7 @@ public class IMBA extends JFrame {
                             if (check != 0)
                             {
                                 check = 0;
-                                int row = table.getSelectedRow();
-                                model.removeRow(row);
-                                rows = rd.readFile(movieFile, 20);
-                                info = re.getRecords(rows);
-                                ur.updateFile(movieFile, model);
-
-                                String[][] data = new String[rows.length][4];
-                                for (int i = 0; i < rows.length; i++) {
-                                    if (rows[i] != null) {
-                                        String[] parts = rows[i].split(" \\| ");
-                                        data[i][0] = parts[0];
-                                        data[i][1] = parts[1];
-                                        data[i][2] = parts[2];
-													 data[i][3] = parts[3];
-                                    }
-                                }
+                                yn.setVisible(true);
                             }
                             
                         }
@@ -155,21 +144,6 @@ public class IMBA extends JFrame {
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
-        back.setVisible(true);
-	 	GridBagConstraints gbc = new GridBagConstraints();
-	 	gbc.gridx = 1;
-    	gbc.gridy = 0;
-    	gbc.insets = new Insets(150, 200, 200, 200);
-	 	add(desc, gbc);
-        desc.setVisible(true);
-        JTextArea description = new JTextArea();
-        description.setSelectionColor(Color.RED);
-        description.setFont(new Font("Serif", Font.PLAIN, 16));
-        description.setLineWrap(true);
-        description.setWrapStyleWord(true);
-        description.setEditable(false);
-        description.setPreferredSize( new Dimension( 800, 100000));
-        desc.add(description);
     }
 
 
@@ -182,13 +156,14 @@ public class IMBA extends JFrame {
         int componentX = 50;
         int componentY = 20;
         int componentSpacing = 30;
+
         JLabel name = new JLabel("Title:");
         name.setBounds(componentX, componentY, 100, componentHeight);
         name.setForeground(Color.BLACK);
         add.add(name, Integer.valueOf(1));
 
         nameText = new JTextField(10);
-        nameText.setBounds(componentX + 100, componentY, 35, componentHeight);
+        nameText.setBounds(componentX + 100, componentY, componentWidth, componentHeight);
         add.add(nameText, Integer.valueOf(1));
 
         JLabel year = new JLabel("Year:");
@@ -208,14 +183,14 @@ public class IMBA extends JFrame {
         genreText = new JTextField(10);
         genreText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
         add.add(genreText, Integer.valueOf(1));
-		  
-		  JLabel rating = new JLabel("Rating:");
-        rating.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
+
+        JLabel rating = new JLabel("Rating:");
+        rating.setBounds(componentX + componentWidth + 30, componentY + 2 * componentSpacing, 100, componentHeight);
         rating.setForeground(Color.BLACK);
         add.add(rating, Integer.valueOf(1));
 
         ratingText = new JTextField(10);
-        ratingText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
+        ratingText.setBounds(componentX + componentWidth + 130, componentY + 2 * componentSpacing, componentWidth, componentHeight);
         add.add(ratingText, Integer.valueOf(1));
 
         enter = new JButton("Enter");
@@ -226,6 +201,20 @@ public class IMBA extends JFrame {
             }
         });
         enter.setVisible(true);
+
+        back = new JButton("Back");
+        back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                add.setVisible(false);
+                back.setVisible(false);
+                desc.setVisible(false);
+                save.setVisible(false);
+                message.setVisible(false);
+                libraryRun();
+                  
+            }
+        });
+        back.setVisible(false);
 
         select = new JButton("Select");
         select.addActionListener(new ActionListener() {
@@ -238,69 +227,13 @@ public class IMBA extends JFrame {
                     int column = 0;
                     value = table.getModel().getValueAt(row, column).toString();
                     value.trim();
-                    if (value.contains("Rush Hour")){
-                        System.out.println("Display Rush Hour");
-                    }
-                    else if (value.contains("Kung Fu Panda")){
-                        System.out.println("Display Kung Fu Panda");
-                    }
-                    else if (value.contains("Jurassic Park")){
-                        System.out.println("Display Jurassic Park");
-                    }
-                    else if (value.contains("The Lord of the Rings: The Return of the King")){
-                        System.out.println("Display The Lord of the Rings: The Return of the King");
-                    }
-                    else if (value.contains("Up")){
-                        System.out.println("Display Up");
-                    }
-                    else if (value.contains("Inception")){
-                        System.out.println("Display Inception");
-                    }
-                    else if (value.contains("Interstellar")){
-                        System.out.println("Display Interstellar");
-                    }
-                    else if (value.contains("Oppenheimer")){
-                        System.out.println("Display Oppenheimer");
-                    }
-                    else if (value.contains("Pulp Fiction")){
-                        System.out.println("Display Pulp Fiction");
-                    }
-                    else if (value.contains("Dune Part Two")){
-                        System.out.println("Display Dune Part Two");
-                    }
-                    else if (value.contains("The Matrix")){
-                        System.out.println("Display The Matrix");
-                    }
-                    else if (value.contains("Fight Club")){
-                        System.out.println("Display Fight Club");
-                    }
-                    else if (value.contains("Shrek")){
-                        System.out.println("Display Shrek");
-                    }
-                    else if (value.contains("Rio")){
-                        System.out.println("Display Rio");
-                    }
-                    else if (value.contains("Avengers: Endgame")){
-                        System.out.println("Display Avengers: Endgame");
-                    }
-                    else if (value.contains("Harry Potter and the Philosopher's Stone")){
-                        System.out.println("Display Harry Potter and the Philosopher's Stone");
-                    }
-                    else if (value.contains("Planet Earth")){
-                        System.out.println("Display Planet Earth");
-                    }
-                    else if (value.contains("Akira")){
-                        System.out.println("Display Akira");
-                    }
-                    else if (value.contains("Spirited Away")){
-                        System.out.println("Display Spirited Away");
-                    }
-                    else if (value.contains("Your Name")){
-                        System.out.println("Display Your Name");
-                    }
-                    else{
-                        System.out.println("Display Generic Movie");
-                    }
+                    desc = new JPanel();
+                    GridBagConstraints gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 0;
+                    add(desc, gbc);
+                    dm.display(value, desc);
+                    back.setVisible(true);
                 }
                 
             }
@@ -315,19 +248,31 @@ public class IMBA extends JFrame {
 				String genreT = genreText.getText();
 				String ratingT = ratingText.getText();
 				String inputText[] = new String[4];
-				if (inputText == null){
                 inputText[0] = nameT;
                 inputText[1] = yearT;
                 inputText[2] = genreT;
-					 inputText[3] = ratingT;
-                model.addRow(inputText);
-                ur.updateFile(movieFile, model);
-					 
+				inputText[3] = ratingT;
+                isNull = false;           
+                for (String element : inputText){
+                    if (element == null || element.trim().isEmpty()){
+                        isNull = true;
+                        break;}
+                }
+				if (!isNull){
+                    message.setVisible(true);
+                    message.setText("SUCCESS! Movie saved to library!");
+                    model.addRow(inputText);
+                    ur.updateFile(movieFile, model);
 				}
-				    nameText.setText("");
+                if (isNull){
+                    message.setText("ERROR: Not all fields have been filled out.");
+                    message.setVisible(true);
+				}
+
+				nameText.setText("");
                 yearText.setText("");
                 genreText.setText("");
-					 ratingText.setText("");
+				ratingText.setText("");
 
             }
         });
@@ -360,25 +305,11 @@ public class IMBA extends JFrame {
 				GridBagConstraints gbc = new GridBagConstraints();
 	 			gbc.gridx = 1;
     			gbc.gridy = 0;
-    			gbc.insets = new Insets(150, 200, 200, 200);
+    			gbc.insets = new Insets(75, 100, 100, 100);
 				add(add, gbc);
 	    		add.setVisible(true);
-                save.setVisible(true);
-					 
+                save.setVisible(true);					 
 		  }});
-        
-        back = new JButton("Back");
-        back.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                add.setVisible(false);
-                back.setVisible(false);
-                desc.setVisible(false);
-                save.setVisible(false);
-                libraryRun();
-                  
-            }
-        });
-        back.setVisible(false);
         
         aMovie.setVisible(false);
         dMovie = new JButton("Delete Movie");
@@ -397,7 +328,7 @@ public class IMBA extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(30, 1, 1, 1);
+        gbc.insets = new Insets(120, 1, 1, 1);
         add(save, gbc);
 
         gbc.gridx = 1;
@@ -409,7 +340,6 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(1, 1, 430, 650);
         add(sort, gbc);
-
 	
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -425,6 +355,62 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(400, 1, 1, 800);
         add(back, gbc);
+        
+        yn = new JFrame();
+        yn.setSize(275, 100);
+        yn.setBackground(Color.WHITE);
+        yn.setLocation(300, 200);
+        yn.setLayout(new FlowLayout());
+
+        ynText = new JLabel("Are you sure you want to delete this movie?");
+        ynText.setForeground(Color.BLACK);
+
+        ynText.setHorizontalAlignment(SwingConstants.CENTER);
+        yn.add(ynText, BorderLayout.NORTH);
+        yn.setVisible(false);
+
+        y = new JButton("Yes");
+        n = new JButton("No");
+        y.setVisible(true);
+        n.setVisible(true);
+        y.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                yn.setVisible(false);
+                int row = table.getSelectedRow();
+                model.removeRow(row);
+                rows = rd.readFile(movieFile, MAX);
+                info = re.getRecords(rows);
+                ur.updateFile(movieFile, model);
+
+                String[][] data = new String[rows.length][4];
+                for (int i = 0; i < rows.length; i++) {
+                    if (rows[i] != null) {
+                        String[] parts = rows[i].split(" \\| ");
+                        data[i][0] = parts[0];
+                        data[i][1] = parts[1];
+                        data[i][2] = parts[2];
+                        data[i][3] = parts[3];
+                    }
+                }
+            }
+        });
+
+        n.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                 yn.setVisible(false);
+            }
+        });
+
+        yn.add(y);
+        yn.add(n);
+
+        message = new JLabel();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(50, 1, 1, 1);
+        add(message, gbc);
+        message.setVisible(false);
+        message.setForeground(Color.WHITE);  
     } // end makeMenus
 
     public static void main(String[] args) {
