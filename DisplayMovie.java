@@ -19,7 +19,7 @@ class DisplayMovie
 {
 	public void display(String movieName, JPanel d)
 	{
-        d.setVisible(true);
+      d.setVisible(true);
 		if (movieName.contains("Rush Hour")){
 
 		}

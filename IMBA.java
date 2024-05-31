@@ -21,9 +21,9 @@ import javax.swing.table.*;
 public class IMBA extends JFrame {
 
     // Declare variables and constants
-    private JButton enter, search, sort, select, dMovie, aMovie, back, save, y, n;
+    private JButton enter, search, sort, select, dMovie, aMovie, back, save, y, n, genreS, yearS, alphaS, ratingS;
     public JPanel lib, add, desc;
-    public JFrame yn;
+    public JFrame yn, sorter;
 	private JTextField nameText, yearText, genreText, ratingText;
 	public JTable table;
     public JLabel message, ynText;
@@ -35,11 +35,12 @@ public class IMBA extends JFrame {
 
     int check = 0;
     String[] rows = new String[MAX];
-	String info [][] = new String[MAX][6];
+	String info [][] = new String[MAX][MAX];
 	ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
     DisplayMovie dm = new DisplayMovie();
+	 Sort s = new Sort();
 
     public IMBA() { // constructor to prepare window size and menubar
       BackgroundPanel bgPanel = new BackgroundPanel("background.png");
@@ -113,6 +114,7 @@ public class IMBA extends JFrame {
                             if (check != 0)
                             {
                                 check = 0;
+										  sorter.setVisible(false);
                                 yn.setVisible(true);
                             }
                             
@@ -222,6 +224,7 @@ public class IMBA extends JFrame {
                 if (check != 0)
                 {
                     check = 0;
+						  sorter.setVisible(false);
                     selectRun();
                     int row = table.getSelectedRow();
                     int column = 0;
@@ -282,16 +285,67 @@ public class IMBA extends JFrame {
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
+					 sorter.setVisible(false);
                 System.out.println("Search still under development");
             }
         });
         search.setVisible(false);
+		  
+		  genreS = new JButton("Genre");
+        genreS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed when the button is clicked
+                System.out.println("Genre");
+            }
+        });
+        genreS.setVisible(false);
+		  
+		  yearS = new JButton("Year");
+        yearS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed when the button is clicked
+                System.out.println("Year");
+            }
+        });
+        yearS.setVisible(false);
+		  
+		  alphaS = new JButton("A - Z");
+        alphaS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+					System.out.println("A - Z");
+            }
+        });
+        alphaS.setVisible(false);
+		  
+		  ratingS = new JButton("Rating");
+        ratingS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed when the button is clicked
+                System.out.println("Rating");
+            }
+        });
+        genreS.setVisible(false);
+		  
+		  sorter = new JFrame();
+		  sorter.setSize(300, 80);
+		  sorter.setTitle("Sorter");
+        sorter.setBackground(Color.WHITE);
+        sorter.setLocation(300, 350);
+        sorter.setLayout(new FlowLayout());
+		  sorter.add(genreS);
+		  sorter.add(yearS);
+		  sorter.add(alphaS);
+		  sorter.add(ratingS);
 
         sort = new JButton("Sort");
         sort.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
-                System.out.println("Sort still under development");
+					 genreS.setVisible(true);
+					 yearS.setVisible(true);
+					 alphaS.setVisible(true);
+					 ratingS.setVisible(true);
+	    			 sorter.setVisible(true);	
             }
         });
         sort.setVisible(false);
@@ -302,13 +356,15 @@ public class IMBA extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Action to be performed when the button is clicked
                 addRun();
+					 
 				GridBagConstraints gbc = new GridBagConstraints();
 	 			gbc.gridx = 1;
     			gbc.gridy = 0;
     			gbc.insets = new Insets(75, 100, 100, 100);
 				add(add, gbc);
 	    		add.setVisible(true);
-                save.setVisible(true);					 
+                save.setVisible(true);
+					 sorter.setVisible(false);					 
 		  }});
         
         aMovie.setVisible(false);
