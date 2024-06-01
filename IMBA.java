@@ -12,18 +12,26 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.text.Utilities; 
 import java.awt.event.*;
 import javax.swing.table.*;
+import javax.swing.RowSorter.SortKey;
 
 public class IMBA extends JFrame {
 
     // Declare variables and constants
-    private JButton enter, search, sort, select, dMovie, aMovie, back, save, y, n, genreS, yearS, alphaS, ratingS;
+    private JButton enter, search, select, dMovie, aMovie, back, save, y, n, refresh;
     public JPanel lib, add, desc;
-    public JFrame yn, sorter;
+    public JFrame yn;
 	private JTextField nameText, yearText, genreText, ratingText;
 	public JTable table;
     public JLabel message, ynText;
@@ -31,6 +39,7 @@ public class IMBA extends JFrame {
     public int start, end, MAX;
     String input, value;
     boolean isNull;
+    public TableRowSorter<TableModel> rowSorter;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
 
     int check = 0;
@@ -40,25 +49,24 @@ public class IMBA extends JFrame {
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
     DisplayMovie dm = new DisplayMovie();
-	 Sort s = new Sort();
 
-    public IMBA() { // constructor to prepare window size and menubar
+    public IMBA() {
       BackgroundPanel bgPanel = new BackgroundPanel("background.png");
       setContentPane(bgPanel);
       setTitle("IMBA");
-      setSize(960, 540); // Window size
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Properly close the application
+      setSize(960, 540);
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       buttons();
-      setVisible(true); // Make the JFrame visible
+      setVisible(true);
     }
 	 
     private void libraryRun(){
         enter.setVisible(false);
         select.setVisible(true);
-        sort.setVisible(true);
         search.setVisible(true);
 	    aMovie.setVisible(true);
         dMovie.setVisible(true);
+        refresh.setVisible(true);
 		
         MAX = 0;
 
@@ -97,6 +105,7 @@ public class IMBA extends JFrame {
         table = new JTable(model);
         table.setDefaultEditor(Object.class, null);
         table.setFont(new Font("Serif", Font.PLAIN, 16));
+        table.setRowSorter(rowSorter);
         lib.add(table);
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -114,7 +123,6 @@ public class IMBA extends JFrame {
                             if (check != 0)
                             {
                                 check = 0;
-										  sorter.setVisible(false);
                                 yn.setVisible(true);
                             }
                             
@@ -130,7 +138,6 @@ public class IMBA extends JFrame {
     private void addRun(){
         enter.setVisible(false);
         select.setVisible(false);
-        sort.setVisible(false);
         search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
@@ -141,13 +148,18 @@ public class IMBA extends JFrame {
     private void selectRun(){
         enter.setVisible(false);
         select.setVisible(false);
-        sort.setVisible(false);
         search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
     }
 
+    public void runRefresh(){
+        rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        List<SortKey> sortKeys = new ArrayList<>();
+        rowSorter.setSortKeys(sortKeys);
+    }
 
     private void buttons() {
         setLayout(new GridBagLayout());
@@ -198,8 +210,8 @@ public class IMBA extends JFrame {
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
                 libraryRun();
+                runRefresh();
             }
         });
         enter.setVisible(true);
@@ -212,6 +224,7 @@ public class IMBA extends JFrame {
                 desc.setVisible(false);
                 save.setVisible(false);
                 message.setVisible(false);
+                refresh.setVisible(false);
                 libraryRun();
                   
             }
@@ -224,7 +237,6 @@ public class IMBA extends JFrame {
                 if (check != 0)
                 {
                     check = 0;
-						  sorter.setVisible(false);
                     selectRun();
                     int row = table.getSelectedRow();
                     int column = 0;
@@ -237,6 +249,7 @@ public class IMBA extends JFrame {
                     add(desc, gbc);
                     dm.display(value, desc);
                     back.setVisible(true);
+                    refresh.setVisible(false);
                 }
                 
             }
@@ -271,12 +284,10 @@ public class IMBA extends JFrame {
                     message.setText("ERROR: Not all fields have been filled out.");
                     message.setVisible(true);
 				}
-
-				nameText.setText("");
+                nameText.setText("");
                 yearText.setText("");
                 genreText.setText("");
-				ratingText.setText("");
-
+                ratingText.setText("");
             }
         });
         save.setVisible(false);
@@ -284,79 +295,23 @@ public class IMBA extends JFrame {
         search = new JButton("Search");
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
-					 sorter.setVisible(false);
                 System.out.println("Search still under development");
             }
         });
-        search.setVisible(false);
-		  
-		  genreS = new JButton("Genre");
-        genreS.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
-                System.out.println("Genre");
-            }
-        });
-        genreS.setVisible(false);
-		  
-		  yearS = new JButton("Year");
-        yearS.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
-                System.out.println("Year");
-            }
-        });
-        yearS.setVisible(false);
-		  
-		  alphaS = new JButton("A - Z");
-        alphaS.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-					System.out.println("A - Z");
-            }
-        });
-        alphaS.setVisible(false);
-		  
-		  ratingS = new JButton("Rating");
-        ratingS.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
-                System.out.println("Rating");
-            }
-        });
-        genreS.setVisible(false);
-		  
-		  sorter = new JFrame();
-		  sorter.setSize(300, 80);
-		  sorter.setTitle("Sorter");
-        sorter.setBackground(Color.WHITE);
-        sorter.setLocation(300, 350);
-        sorter.setLayout(new FlowLayout());
-		  sorter.add(genreS);
-		  sorter.add(yearS);
-		  sorter.add(alphaS);
-		  sorter.add(ratingS);
+        search.setVisible(false);	 
 
-        sort = new JButton("Sort");
-        sort.addActionListener(new ActionListener() {
+        refresh = new JButton("Refresh");
+        refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
-					 genreS.setVisible(true);
-					 yearS.setVisible(true);
-					 alphaS.setVisible(true);
-					 ratingS.setVisible(true);
-	    			 sorter.setVisible(true);	
+                runRefresh();
             }
         });
-        sort.setVisible(false);
+        refresh.setVisible(false);
 
-	
         aMovie = new JButton("Add Movie");
         aMovie.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Action to be performed when the button is clicked
                 addRun();
-					 
 				GridBagConstraints gbc = new GridBagConstraints();
 	 			gbc.gridx = 1;
     			gbc.gridy = 0;
@@ -364,7 +319,7 @@ public class IMBA extends JFrame {
 				add(add, gbc);
 	    		add.setVisible(true);
                 save.setVisible(true);
-					 sorter.setVisible(false);					 
+                refresh.setVisible(false);			 
 		  }});
         
         aMovie.setVisible(false);
@@ -392,10 +347,6 @@ public class IMBA extends JFrame {
         gbc.insets = new Insets(1, 1, 430, 800);
         add(search, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(1, 1, 430, 650);
-        add(sort, gbc);
 	
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -411,6 +362,11 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(400, 1, 1, 800);
         add(back, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(1, 1, 430, 630);
+        add(refresh, gbc);
         
         yn = new JFrame();
         yn.setSize(275, 100);
@@ -450,7 +406,6 @@ public class IMBA extends JFrame {
                 }
             }
         });
-
         n.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                  yn.setVisible(false);
@@ -466,10 +421,11 @@ public class IMBA extends JFrame {
         gbc.insets = new Insets(50, 1, 1, 1);
         add(message, gbc);
         message.setVisible(false);
-        message.setForeground(Color.WHITE);  
-    } // end makeMenus
+        message.setForeground(Color.WHITE);
+    }
+    
 
     public static void main(String[] args) {
-        new IMBA(); // Instantiates IMBA class
-    } // end main
-} // end class
+        new IMBA();
+    }
+}

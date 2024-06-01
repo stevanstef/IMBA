@@ -21,7 +21,7 @@ class DisplayMovie
 	{
       d.setVisible(true);
 		if (movieName.contains("Rush Hour")){
-
+			System.out.println("Display Rush Hour");
 		}
 		else if (movieName.contains("Kung Fu Panda")){
 			System.out.println("Display Kung Fu Panda");
