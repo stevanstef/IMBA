@@ -32,8 +32,8 @@ public class IMBA extends JFrame {
     private JButton enter, search, select, dMovie, aMovie, back, save, y, n, refresh;
     public JPanel lib, add, desc;
     public JFrame yn;
-	private JTextField nameText, yearText, genreText, ratingText;
-	public JTable table;
+    private JTextField nameText, yearText, genreText, ratingText, searchText;
+	 public JTable table;
     public JLabel message, ynText;
     public DefaultTableModel model;
     public int start, end, MAX;
@@ -44,8 +44,8 @@ public class IMBA extends JFrame {
 
     int check = 0;
     String[] rows = new String[MAX];
-	String info [][] = new String[MAX][MAX];
-	ReadData rd = new ReadData();
+	 String info [][] = new String[MAX][MAX];
+	 ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
     DisplayMovie dm = new DisplayMovie();
@@ -64,7 +64,7 @@ public class IMBA extends JFrame {
         enter.setVisible(false);
         select.setVisible(true);
         search.setVisible(true);
-	    aMovie.setVisible(true);
+	     aMovie.setVisible(true);
         dMovie.setVisible(true);
         refresh.setVisible(true);
 		
@@ -145,22 +145,25 @@ public class IMBA extends JFrame {
         back.setVisible(true);
     }
 
-    private void selectRun(){
+    private void fade(){
         enter.setVisible(false);
         select.setVisible(false);
         search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
+		  back.setVisible(true);
+        refresh.setVisible(false);
     }
 
     public void runRefresh(){
+	 	  check = 0;
         rowSorter = new TableRowSorter<>(model);
         table.setRowSorter(rowSorter);
         List<SortKey> sortKeys = new ArrayList<>();
         rowSorter.setSortKeys(sortKeys);
     }
-
+	 
     private void buttons() {
         setLayout(new GridBagLayout());
         desc = new JPanel();
@@ -206,6 +209,11 @@ public class IMBA extends JFrame {
         ratingText = new JTextField(10);
         ratingText.setBounds(componentX + componentWidth + 130, componentY + 2 * componentSpacing, componentWidth, componentHeight);
         add.add(ratingText, Integer.valueOf(1));
+		  
+		  searchText = new JTextField(10);
+		  JPanel st = new JPanel();
+		  st.setVisible(false);
+		  st.add(searchText);
 
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
@@ -237,7 +245,7 @@ public class IMBA extends JFrame {
                 if (check != 0)
                 {
                     check = 0;
-                    selectRun();
+                    fade();
                     int row = table.getSelectedRow();
                     int column = 0;
                     value = table.getModel().getValueAt(row, column).toString();
@@ -248,8 +256,6 @@ public class IMBA extends JFrame {
                     gbc.gridy = 0;
                     add(desc, gbc);
                     dm.display(value, desc);
-                    back.setVisible(true);
-                    refresh.setVisible(false);
                 }
                 
             }
@@ -291,11 +297,14 @@ public class IMBA extends JFrame {
             }
         });
         save.setVisible(false);
-
+		  
         search = new JButton("Search");
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Search still under development");
+					search.setVisible(false);
+					st.setVisible(true);
+					searchText.setVisible(true);
+					searchText.setText("");
             }
         });
         search.setVisible(false);	 
@@ -304,6 +313,10 @@ public class IMBA extends JFrame {
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 runRefresh();
+					 search.setVisible(true);
+					 st.setVisible(false);
+					 searchText.setVisible(false);
+					 searchText.setText("");
             }
         });
         refresh.setVisible(false);
@@ -311,15 +324,15 @@ public class IMBA extends JFrame {
         aMovie = new JButton("Add Movie");
         aMovie.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addRun();
+            addRun();
 				GridBagConstraints gbc = new GridBagConstraints();
 	 			gbc.gridx = 1;
     			gbc.gridy = 0;
     			gbc.insets = new Insets(75, 100, 100, 100);
 				add(add, gbc);
 	    		add.setVisible(true);
-                save.setVisible(true);
-                refresh.setVisible(false);			 
+            save.setVisible(true);
+            refresh.setVisible(false);			 
 		  }});
         
         aMovie.setVisible(false);
@@ -336,6 +349,11 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(400, 1, 1, 800);
         add(select, gbc);
+		  
+		  gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 1, 430, 800);
+        add(st, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -346,7 +364,6 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(1, 1, 430, 800);
         add(search, gbc);
-
 	
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -365,7 +382,7 @@ public class IMBA extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(1, 1, 430, 630);
+        gbc.insets = new Insets(1, 1, 430, 550);
         add(refresh, gbc);
         
         yn = new JFrame();
@@ -422,6 +439,7 @@ public class IMBA extends JFrame {
         add(message, gbc);
         message.setVisible(false);
         message.setForeground(Color.WHITE);
+		  searchText.setVisible(false);
     }
     
 
