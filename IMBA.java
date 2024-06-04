@@ -161,7 +161,7 @@ public class IMBA extends JFrame {
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
-		back.setVisible(true);
+		  back.setVisible(true);
         submit.setVisible(false);
         search.setVisible(false);
         searchText.setVisible(false);
@@ -442,40 +442,27 @@ public class IMBA extends JFrame {
         y.setVisible(true);
         n.setVisible(true);
         y.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                /*rows = rd.readFile(movieFile, MAX);
+            public void actionPerformed(ActionEvent e) {  
+				    rows = rd.readFile(movieFile, MAX);
                 info = re.getRecords(rows);
                 String[] columnNames = {"Title", "Year", "Genre", "Rating"};
-                String[][] data = new String[rows.length][4];
-                for (int i = 0; i < rows.length; i++) {
-                    if (rows[i] != null) {
-                        String[] parts = rows[i].split(" \\| ");
-                        data[i][0] = parts[0];
-                        data[i][1] = parts[1];
-                        data[i][2] = parts[2];
-                        data[i][3] = parts[3];
-                    }
-                }
+					 int rowCount = table.getRowCount();
+					 int columnCount = table.getColumnCount();
+					 String[][] data = new String[rowCount][columnCount];
+					 for (int row = 0; row < rowCount; row++){
+					 	for (int column = 0; column < columnCount; column++){
+							data[row][column] = table.getValueAt(row, column);
+						}
+					 }
+
                 DefaultTableModel newModel = new DefaultTableModel(data, columnNames);
-                table.setModel(newModel);*/
-                
+                table.setModel(newModel);
+					        
                 yn.setVisible(false);
-                int row = table.getSelectedRow();
-                model.removeRow(row);
+                //model.removeRow(row);
                 rows = rd.readFile(movieFile, MAX);
                 info = re.getRecords(rows);
                 ur.updateFile(movieFile, model);
-
-                data = new String[rows.length][4];
-                for (int i = 0; i < rows.length; i++) {
-                    if (rows[i] != null) {
-                        String[] parts = rows[i].split(" \\| ");
-                        data[i][0] = parts[0];
-                        data[i][1] = parts[1];
-                        data[i][2] = parts[2];
-                        data[i][3] = parts[3];
-                    }
-                }
             }
         });
         n.addActionListener(new ActionListener() {
