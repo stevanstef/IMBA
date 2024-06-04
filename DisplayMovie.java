@@ -108,6 +108,7 @@ class DisplayMovie
 		}
 		else{
 			imagePath = "movie_images/noMov.jpg";
+			d.setText("");
 			d.setEditable(true);
 		}
 		ImageIcon ii = new ImageIcon(imagePath);
