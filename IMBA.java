@@ -21,6 +21,8 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.RowSorter.SortKey;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.text.Utilities; 
@@ -32,15 +34,15 @@ public class IMBA extends JFrame {
 
     // Declare variables and constants
     private JButton enter, search, select, dMovie, aMovie, back, save, y, n, submit;
-    public JPanel lib, add, img, st, desc;
+    public JPanel lib, add, img, st, desc, login;
     public JFrame yn;
-    private JTextField nameText, yearText, genreText, ratingText, searchText;
+    private JTextField nameText, yearText, genreText, ratingText, searchText, descriptionText, imageText, passwordText, usernameText;
     public JTextArea word;
 	public JTable table;
-    public JLabel message, ynText;
+    public JLabel message, ynText, welcome;
     public DefaultTableModel model;
     public int start, end, MAX;
-    String input, value;
+    String input, movName, movYear, movGenre, movRating;
     String [][] data;
     boolean isNull;
     public TableRowSorter<TableModel> rowSorter;
@@ -109,9 +111,35 @@ public class IMBA extends JFrame {
         table = new JTable(model);
         table.setDefaultEditor(Object.class, null);
         table.setFont(new Font("Serif", Font.PLAIN, 16));
-        table.setRowSorter(rowSorter);
         lib.add(table);
         table.setAutoCreateRowSorter(true);
+
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setModel(model);
+        table.setRowSorter(rowSorter);
+    
+        rowSorter.addRowSorterListener(new RowSorterListener() {
+            public void sorterChanged(RowSorterEvent e) {
+                if (e.getType() == RowSorterEvent.Type.SORTED) {
+                    String[] columnNames = {"Title", "Year", "Genre", "Rating"};
+                    int rowCount = table.getRowCount();
+                    int columnCount = table.getColumnCount();
+                    Object[][] tableData = new Object[rowCount][columnCount];
+                    for (int row = 0; row < rowCount; row++){
+                         for (int column = 0; column < columnCount; column++){
+                            tableData[row][column] = (String) table.getValueAt(row, column);
+                        }
+                     }
+                     
+                    model = new DefaultTableModel(tableData, columnNames);
+                    table.setModel(model);
+                    TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+                    table.setRowSorter(rowSorter);
+                    rowSorter.addRowSorterListener(this);
+                }
+            }
+            }
+        );
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -121,6 +149,21 @@ public class IMBA extends JFrame {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    fade();
+                    int row = table.getSelectedRow();
+                    int column = 0;
+                    movName = table.getModel().getValueAt(row, column).toString();
+                    movName.trim();
+                    movYear = table.getModel().getValueAt(row, column+1).toString();
+                    movYear.trim();
+                    movGenre = table.getModel().getValueAt(row, column+2).toString();
+                    movGenre.trim();
+                    movRating = table.getModel().getValueAt(row, column+3).toString();
+                    movRating.trim();
+                    buildDisplay();
+                    dm.display(movName, movYear, movGenre, movRating, img, word);
+                }
                 try {
                     check = 1;
                     dMovie.addActionListener(new ActionListener() {
@@ -141,6 +184,7 @@ public class IMBA extends JFrame {
         });
    }
     private void addRun(){
+        welcome.setVisible(false);
         enter.setVisible(false);
         select.setVisible(false);
         search.setVisible(false);
@@ -155,13 +199,14 @@ public class IMBA extends JFrame {
     }
 
     private void fade(){
+        welcome.setVisible(false);
         enter.setVisible(false);
         select.setVisible(false);
         search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
-		  back.setVisible(true);
+		back.setVisible(true);
         submit.setVisible(false);
         search.setVisible(false);
         searchText.setVisible(false);
@@ -193,56 +238,62 @@ public class IMBA extends JFrame {
         word.setWrapStyleWord(true);
         word.setPreferredSize( new Dimension( 250, 800));
         word.setEditable(false);
-        int componentWidth = 400;
-        int componentHeight = 25;
-        int componentX = 50;
-        int componentY = 20;
-        int componentSpacing = 30;
 
         JLabel name = new JLabel("Title:");
-        name.setBounds(componentX, componentY, 100, componentHeight);
         name.setForeground(Color.BLACK);
         add.add(name, Integer.valueOf(1));
 
-        nameText = new JTextField(10);
-        nameText.setBounds(componentX + 100, componentY, componentWidth, componentHeight);
+        nameText = new JTextField(20);
         add.add(nameText, Integer.valueOf(1));
 
         JLabel year = new JLabel("Year:");
-        year.setBounds(componentX, componentY + componentSpacing, 100, componentHeight);
         year.setForeground(Color.BLACK);
         add.add(year, Integer.valueOf(1));
 
-        yearText = new JTextField(10);
-        yearText.setBounds(componentX + 100, componentY + componentSpacing, componentWidth, componentHeight);
+        yearText = new JTextField(20);
         add.add(yearText, Integer.valueOf(1));
 
         JLabel genre = new JLabel("Genre:");
-        genre.setBounds(componentX, componentY + 2 * componentSpacing, 100, componentHeight);
         genre.setForeground(Color.BLACK);
         add.add(genre, Integer.valueOf(1));
 
-        genreText = new JTextField(10);
-        genreText.setBounds(componentX + 100, componentY + 2 * componentSpacing, componentWidth, componentHeight);
+        genreText = new JTextField(20);
         add.add(genreText, Integer.valueOf(1));
 
         JLabel rating = new JLabel("Rating:");
-        rating.setBounds(componentX + componentWidth + 30, componentY + 2 * componentSpacing, 100, componentHeight);
         rating.setForeground(Color.BLACK);
         add.add(rating, Integer.valueOf(1));
 
         ratingText = new JTextField(10);
-        ratingText.setBounds(componentX + componentWidth + 130, componentY + 2 * componentSpacing, componentWidth, componentHeight);
         add.add(ratingText, Integer.valueOf(1));
+        ratingText.setText("/10");
+
+        JLabel description = new JLabel("Description:");
+        description.setForeground(Color.BLACK);
+        add.add(description, Integer.valueOf(1));
+
+        descriptionText = new JTextField(10);
+        add.add(descriptionText, Integer.valueOf(1));
+
+        JLabel image = new JLabel("Path to image:");
+        image.setForeground(Color.BLACK);
+        add.add(image, Integer.valueOf(1));
+
+        imageText = new JTextField(10);
+        add.add(imageText, Integer.valueOf(1));
 		  
-		  searchText = new JTextField(11);
-		  st = new JPanel();
-		  st.setVisible(false);
-		  st.add(searchText);
+		searchText = new JTextField(11);
+		st = new JPanel();
+		st.setVisible(false);
+		st.add(searchText);
 
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                welcome.setVisible(true);
+                String usernameT = usernameText.getText();
+                welcome.setText("Welcome to IMBA, " + usernameT + "!");
+                login.setVisible(false);
                 libraryRun();
             }
         });
@@ -251,6 +302,7 @@ public class IMBA extends JFrame {
         back = new JButton("Back");
         back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                welcome.setVisible(true);
                 add.setVisible(false);
                 back.setVisible(false);
                 img.setVisible(false);
@@ -258,6 +310,7 @@ public class IMBA extends JFrame {
                 message.setVisible(false);
                 desc.setVisible(false);
                 word.setEditable(false);
+                ur.updateFile(movieFile, model);
                 libraryRun();
             }
         });
@@ -272,10 +325,16 @@ public class IMBA extends JFrame {
                     fade();
                     int row = table.getSelectedRow();
                     int column = 0;
-                    value = table.getModel().getValueAt(row, column).toString();
-                    value.trim();
+                    movName = table.getModel().getValueAt(row, column).toString();
+                    movName.trim();
+                    movYear = table.getModel().getValueAt(row, column+1).toString();
+                    movYear.trim();
+                    movGenre = table.getModel().getValueAt(row, column+2).toString();
+                    movGenre.trim();
+                    movRating = table.getModel().getValueAt(row, column+3).toString();
+                    movRating.trim();
                     buildDisplay();
-                    dm.display(value, img, word);
+                    dm.display(movName, movYear, movGenre, movRating, img, word);
                 }
                 
             }
@@ -289,11 +348,15 @@ public class IMBA extends JFrame {
 				String yearT = yearText.getText();
 				String genreT = genreText.getText();
 				String ratingT = ratingText.getText();
-				String inputText[] = new String[4];
+                String imageT = imageText.getText();
+                String descriptionT = descriptionText.getText();
+				String inputText[] = new String[6];
                 inputText[0] = nameT;
                 inputText[1] = yearT;
                 inputText[2] = genreT;
 				inputText[3] = ratingT;
+                inputText[4] = descriptionT;
+                inputText[5] = imageT;
                 isNull = false;           
                 for (String element : inputText){
                     if (element == null || element.trim().isEmpty()){
@@ -313,7 +376,9 @@ public class IMBA extends JFrame {
                 nameText.setText("");
                 yearText.setText("");
                 genreText.setText("");
-                ratingText.setText("");
+                ratingText.setText("/10");
+                descriptionText.setText("");
+                imageText.setText("");
             }
         });
         save.setVisible(false);
@@ -337,11 +402,20 @@ public class IMBA extends JFrame {
                             data[i][3] = parts[3];
                         }
                     }
-                    String result = s.searching(movieFile, data, 0, searchT);
-                    if (result == searchT){
+                    int search = s.searching(movieFile, data, 0, searchT);
+                    if (search != -1){
                         fade();
                         buildDisplay();
-                        dm.display(searchT, img, word);
+                        int column = 0;
+                        movName = table.getModel().getValueAt(search, column).toString();
+                        movName.trim();
+                        movYear = table.getModel().getValueAt(search, column+1).toString();
+                        movYear.trim();
+                        movGenre = table.getModel().getValueAt(search, column+2).toString();
+                        movGenre.trim();
+                        movRating = table.getModel().getValueAt(search, column+3).toString();
+                        movRating.trim();
+                        dm.display(searchT, movYear, movGenre, movRating, img, word);
                     }
 				}
                 searchText.setText("");
@@ -368,8 +442,9 @@ public class IMBA extends JFrame {
 				GridBagConstraints gbc = new GridBagConstraints();
 	 			gbc.gridx = 1;
     			gbc.gridy = 0;
-    			gbc.insets = new Insets(75, 100, 100, 100);
+    			gbc.insets = new Insets(100, 150, 100, 150);
 				add(add, gbc);
+                add.setLayout(new BoxLayout(add, BoxLayout.Y_AXIS));
 	    		add.setVisible(true);
                 save.setVisible(true);		 
 		  }});
@@ -381,7 +456,7 @@ public class IMBA extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(400, 1, 1, 1);
+        gbc.insets = new Insets(200, 1, 1, 1);
         add(enter, gbc);
 
         gbc.gridx = 1;
@@ -396,7 +471,7 @@ public class IMBA extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(50, 1, 1, 1);
+        gbc.insets = new Insets(250, 1, 1, 1);
         add(save, gbc);
 
         gbc.gridx = 1;
@@ -424,6 +499,29 @@ public class IMBA extends JFrame {
         gbc.insets = new Insets(400, 1, 1, 800);
         add(back, gbc);
         
+        login = new JPanel();
+        login.setLayout(new BoxLayout(login, BoxLayout.PAGE_AXIS));
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(70, 1, 1, 1);
+        add(login, gbc);
+
+        login.setVisible(true);
+        JLabel username = new JLabel("Username:");
+        username.setForeground(Color.BLACK);
+        login.add(username, Integer.valueOf(1));
+
+        usernameText = new JTextField(10);
+        login.add(usernameText, Integer.valueOf(1));
+
+        JLabel password = new JLabel("Password:");
+        password.setForeground(Color.BLACK);
+        login.add(password, Integer.valueOf(1));
+
+        JPasswordField p = new JPasswordField("",6);
+        p.setEchoChar('*');
+        login.add(p);
+
         yn = new JFrame();
         yn.setSize(275, 100);
         yn.setBackground(Color.WHITE);
@@ -443,23 +541,9 @@ public class IMBA extends JFrame {
         n.setVisible(true);
         y.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {  
-				    rows = rd.readFile(movieFile, MAX);
-                info = re.getRecords(rows);
-                String[] columnNames = {"Title", "Year", "Genre", "Rating"};
-					 int rowCount = table.getRowCount();
-					 int columnCount = table.getColumnCount();
-					 String[][] data = new String[rowCount][columnCount];
-					 for (int row = 0; row < rowCount; row++){
-					 	for (int column = 0; column < columnCount; column++){
-							data[row][column] = table.getValueAt(row, column);
-						}
-					 }
-
-                DefaultTableModel newModel = new DefaultTableModel(data, columnNames);
-                table.setModel(newModel);
-					        
                 yn.setVisible(false);
-                //model.removeRow(row);
+                int row = table.getSelectedRow();
+                model.removeRow(row);
                 rows = rd.readFile(movieFile, MAX);
                 info = re.getRecords(rows);
                 ur.updateFile(movieFile, model);
@@ -477,11 +561,19 @@ public class IMBA extends JFrame {
         message = new JLabel();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(120, 1, 1, 1);
+        gbc.insets = new Insets(300, 1, 1, 1);
         add(message, gbc);
         message.setVisible(false);
         message.setForeground(Color.WHITE);
 		searchText.setVisible(false);
+
+        welcome = new JLabel();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(1, 200, 250, 200);
+        add(welcome, gbc);
+        welcome.setVisible(false);
+        welcome.setForeground(Color.WHITE);
     }
     
     public static void main(String[] args) {
