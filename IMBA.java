@@ -387,21 +387,21 @@ public class IMBA extends JFrame {
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				String searchT = searchText.getText();
-                isNull = false;           
+                data = new String[rows.length][MAX];
+                for (int i = 0; i < rows.length; i++) {
+                    if (rows[i] != null) {
+                        String[] parts = rows[i].split(" \\| ");
+                        data[i][0] = parts[0];
+                        data[i][1] = parts[1];
+                        data[i][2] = parts[2];
+                        data[i][3] = parts[3];
+                    }
+                }
+                isNull = false;       
                 if (searchT == null || searchT.trim().isEmpty()){
                     isNull = true;}
 
 				if (!isNull){
-                    data = new String[rows.length][MAX];
-                    for (int i = 0; i < rows.length; i++) {
-                        if (rows[i] != null) {
-                            String[] parts = rows[i].split(" \\| ");
-                            data[i][0] = parts[0];
-                            data[i][1] = parts[1];
-                            data[i][2] = parts[2];
-                            data[i][3] = parts[3];
-                        }
-                    }
                     int search = s.searching(movieFile, data, 0, searchT);
                     if (search != -1){
                         fade();
@@ -544,9 +544,9 @@ public class IMBA extends JFrame {
                 yn.setVisible(false);
                 int row = table.getSelectedRow();
                 model.removeRow(row);
+                ur.updateFile(movieFile, model);
                 rows = rd.readFile(movieFile, MAX);
                 info = re.getRecords(rows);
-                ur.updateFile(movieFile, model);
             }
         });
         n.addActionListener(new ActionListener() {
