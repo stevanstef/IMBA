@@ -131,6 +131,7 @@ public class IMBA extends JFrame {
         tableMaster.setRowSorter(rowSorter);
         table.setRowSorter(rowSorter);
 		lib.setForeground(Color.BLACK);
+        table.getTableHeader().setReorderingAllowed(false);
     
         rowSorter.addRowSorterListener(new RowSorterListener() {
             public void sorterChanged(RowSorterEvent e) {
