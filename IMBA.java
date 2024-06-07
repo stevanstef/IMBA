@@ -22,7 +22,7 @@ public class IMBA extends JFrame {
     public JLabel message, ynText, welcome, sortMessage;
     public DefaultTableModel model, modelMaster;
     public JPasswordField p;
-    public int start, end, MAX;
+    public int start, MAX;
     String input, movName, movYear, movGenre, movRating, movDescription, movImagepath;
     String[][] data;
     boolean isNull;
