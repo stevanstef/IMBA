@@ -1,104 +1,84 @@
-//Filename: IMBA.java
-//Date: May 21st 2024
-
+// Import statements
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.table.*;
 import java.awt.event.*;
-import java.util.List;
-import java.util.ArrayList;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.text.Utilities; 
-import java.awt.event.*;
-import javax.swing.table.*;
-import javax.swing.RowSorter.SortKey;
-
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.swing.*;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.table.*;
 
+// Main class
 public class IMBA extends JFrame {
-
+    
     // Declare variables and constants
     private JButton enter, search, select, dMovie, aMovie, back, save, y, n, submit, help;
     public JPanel lib, add, img, st, desc, login, aDesc;
     public JFrame yn;
     private JTextField nameText, yearText, genreText, ratingText, searchText, imageText, usernameText;
     public JTextArea word, descriptionText;
-	public JTable table, tableMaster;
+    public JTable table, tableMaster;
     public JLabel message, ynText, welcome, sortMessage;
     public DefaultTableModel model, modelMaster;
-	public JPasswordField p;
+    public JPasswordField p;
     public int start, end, MAX;
     String input, movName, movYear, movGenre, movRating, movDescription, movImagepath;
-    String [][] data;
+    String[][] data;
     boolean isNull;
     public TableRowSorter<TableModel> rowSorter;
     static String movieFile = "movieList.txt"; // movieFile = "movieList.txt"
-
     int check = 0;
     String[] rows = new String[MAX];
-	String info [][] = new String[MAX][MAX];
-	ReadData rd = new ReadData();
+    String info[][] = new String[MAX][MAX];
+    ReadData rd = new ReadData();
     Records re = new Records();
     UpdateRecords ur = new UpdateRecords();
     DisplayMovie dm = new DisplayMovie();
     Search s = new Search();
-
+    
+    // Constructor
     public IMBA() {
-      BackgroundPanel bgPanel = new BackgroundPanel("background.png");
-      setContentPane(bgPanel);
-      setTitle("IMBA");
-      setSize(960, 540);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      buttons();
-      setVisible(true);
+        BackgroundPanel bgPanel = new BackgroundPanel("background.png");
+        setContentPane(bgPanel);
+        setTitle("IMBA");
+        setSize(960, 540);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        buttons();
+        setVisible(true);
     }
-	 
-    private void libraryRun(){
+    
+    // Method called once enter is pressed
+    private void libraryRun() {
+        // Set visibility of buttons
         enter.setVisible(false);
         select.setVisible(true);
         search.setVisible(true);
-	    aMovie.setVisible(true);
+        aMovie.setVisible(true);
         dMovie.setVisible(true);
-		
+        
         MAX = 0;
 
+        // Count the number of records in the file and store in int MAX
         try (BufferedReader reader = new BufferedReader(new FileReader(movieFile))) {
             while (reader.readLine() != null) {
                 MAX++;
             }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        // Initialize libray panel
         rows = new String[MAX];
-
-		lib = new JPanel();
-	 	GridBagConstraints gbc = new GridBagConstraints();
-	 	gbc.gridx = 1;
-    	gbc.gridy = 0;
-    	gbc.insets = new Insets(150, 200, 200, 200);
-	 	add(lib, gbc);
-	    lib.setVisible(true);
+        lib = new JPanel();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(150, 200, 200, 200);
+        add(lib, gbc);
+        lib.setVisible(true);
         
+        // Read data from file and store in array
         rows = rd.readFile(movieFile, MAX);
         info = re.getRecords(rows);
         
@@ -111,12 +91,13 @@ public class IMBA extends JFrame {
                 data[i][0] = parts[0];
                 data[i][1] = parts[1];
                 data[i][2] = parts[2];
-				data[i][3] = parts[3];
+                data[i][3] = parts[3];
                 data[i][4] = parts[4];
                 data[i][5] = parts[5];
             }
         }
 
+        // Initialize table models and tables
         tableMaster = new JTable();
         modelMaster = new DefaultTableModel(data, columnNamesMaster);
         tableMaster.setModel(modelMaster);
@@ -126,11 +107,12 @@ public class IMBA extends JFrame {
         table.setFont(new Font("Serif", Font.PLAIN, 16));
         lib.add(table);
 
+        // Setup sorting functionality
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         table.setModel(model);
         tableMaster.setRowSorter(rowSorter);
         table.setRowSorter(rowSorter);
-		lib.setForeground(Color.BLACK);
+        lib.setForeground(Color.BLACK);
         table.getTableHeader().setReorderingAllowed(false);
     
         rowSorter.addRowSorterListener(new RowSorterListener() {
@@ -153,11 +135,13 @@ public class IMBA extends JFrame {
             }
         });
 
+        // Add scroll functionality
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		  scrollPane.setPreferredSize(new Dimension(500, 141));
+        scrollPane.setPreferredSize(new Dimension(500, 141));
         lib.add(scrollPane);
 
+        // Add mouse listener to the table for displaying movie details and deleting movies
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -201,6 +185,8 @@ public class IMBA extends JFrame {
             }
         });
    }
+
+    // Method called once add movie is pressed
     private void addRun(){
 	 	help.setVisible(false);
         welcome.setVisible(false);
@@ -218,6 +204,7 @@ public class IMBA extends JFrame {
         st.setVisible(false);
     }
 
+    // Reevaluates int MAX and rows array
     public void libraryRefresh(){
         MAX = 0;
 
@@ -232,6 +219,7 @@ public class IMBA extends JFrame {
         rows = new String[MAX];
     }
 
+    // Removes visibility of some components
     private void fade(){
 	 	sortMessage.setVisible(false);
 	 	help.setVisible(false);
@@ -249,6 +237,7 @@ public class IMBA extends JFrame {
         st.setVisible(false);
     }
 
+    // Builds the display for seeing details of movie
     private void buildDisplay(){
         desc.setVisible(true);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -263,6 +252,7 @@ public class IMBA extends JFrame {
         desc.add(word);
     }
 
+    // Method called to create program's main components
     private void buttons() {
         setLayout(new GridBagLayout());
         add = new JPanel();
@@ -275,6 +265,7 @@ public class IMBA extends JFrame {
         word.setPreferredSize( new Dimension( 350, 800));
         word.setEditable(false);
 
+        // Initialize components for adding a movie
         JLabel name = new JLabel("Title:");
         name.setForeground(Color.BLACK);
         add.add(name, Integer.valueOf(1));
@@ -306,7 +297,6 @@ public class IMBA extends JFrame {
 
         JLabel description = new JLabel("Description:");
         description.setForeground(Color.BLACK);
-
         descriptionText = new JTextArea();
 
         aDesc = new JPanel();
@@ -324,12 +314,14 @@ public class IMBA extends JFrame {
 
         imageText = new JTextField(10);
         add.add(imageText, Integer.valueOf(1));
-		  
+		
+        // Initialize components for searching for a movie
 		searchText = new JTextField(11);
 		st = new JPanel();
 		st.setVisible(false);
 		st.add(searchText);
 
+        // Enter button functionality
         enter = new JButton("Enter");
         enter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -350,6 +342,7 @@ public class IMBA extends JFrame {
         });
         enter.setVisible(true);
 
+        // Back button functionality
         back = new JButton("Back");
         back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -371,6 +364,7 @@ public class IMBA extends JFrame {
         });
         back.setVisible(false);
 
+        // Select button functionality
         select = new JButton("Select");
         select.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -399,12 +393,13 @@ public class IMBA extends JFrame {
             }
         });
         select.setVisible(false);
-		  
+		
+        // Help button functionality
 		help = new JButton("Help");
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("www.google.com"));
+                    Desktop.getDesktop().browse(new URI("https://sites.google.com/student.tdsb.on.ca/imba-culminating/home"));
                 } catch (IOException | URISyntaxException ex) {
                     ex.printStackTrace();
                 }
@@ -412,6 +407,7 @@ public class IMBA extends JFrame {
         });
         help.setVisible(false);
 
+        // Save button functionality
         save = new JButton("Save");
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -455,6 +451,7 @@ public class IMBA extends JFrame {
         });
         save.setVisible(false);
 
+        // Submit button functionality
         submit = new JButton("Submit");
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -502,7 +499,8 @@ public class IMBA extends JFrame {
             }
         });
         submit.setVisible(false);
-		  
+		
+        // Search button functionality
         search = new JButton("Search");
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -515,6 +513,7 @@ public class IMBA extends JFrame {
         });
         search.setVisible(false);	 
 
+        // Add movie button functionality
         aMovie = new JButton("Add Movie");
         aMovie.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -538,6 +537,7 @@ public class IMBA extends JFrame {
         dMovie = new JButton("Delete Movie");
         dMovie.setVisible(false);
 
+        // Initialize position of components on jframe
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -549,7 +549,7 @@ public class IMBA extends JFrame {
         gbc.insets = new Insets(400, 1, 1, 800);
         add(select, gbc);
 		  
-		  gbc.gridx = 1;
+		gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 1, 430, 760);
         add(st, gbc);
@@ -589,6 +589,7 @@ public class IMBA extends JFrame {
         gbc.insets = new Insets(400, 1, 1, 800);
         add(back, gbc);
         
+        // Initialize login jpanel with necessary components
         login = new JPanel();
         login.setLayout(new BoxLayout(login, BoxLayout.PAGE_AXIS));
         gbc.gridx = 1;
@@ -612,6 +613,7 @@ public class IMBA extends JFrame {
         p.setEchoChar('*');
         login.add(p);
 
+        // Initialize yes/no jframe for when user attempts to delete a movie
         yn = new JFrame();
         yn.setSize(275, 100);
         yn.setBackground(Color.WHITE);
@@ -662,6 +664,7 @@ public class IMBA extends JFrame {
         message.setForeground(Color.WHITE);
 		searchText.setVisible(false);
 
+        // Initialize welcome message
         welcome = new JLabel();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -669,7 +672,8 @@ public class IMBA extends JFrame {
         add(welcome, gbc);
         welcome.setVisible(false);
         welcome.setForeground(Color.WHITE);
-		  
+		
+        // Initialize sort message above headings
 		sortMessage = new JLabel();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -680,7 +684,11 @@ public class IMBA extends JFrame {
 		sortMessage.setText("Click a heading to sort the table by that attribute.");
     }
     
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
-        new IMBA();
+        new IMBA(); // Instantiates a new IMBA object
     }
 }
