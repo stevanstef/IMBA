@@ -399,7 +399,7 @@ public class IMBA extends JFrame {
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("https://sites.google.com/student.tdsb.on.ca/imba-culminating/home"));
+                    Desktop.getDesktop().browse(new URI("https://sites.google.com/student.tdsb.on.ca/imba-culminating/tutorial"));
                 } catch (IOException | URISyntaxException ex) {
                     ex.printStackTrace();
                 }
