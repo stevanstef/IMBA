@@ -13,15 +13,14 @@ import javax.swing.table.*;
 public class IMBA extends JFrame {
     
     // Declare variables and constants
-    private JButton enter, search, select, dMovie, aMovie, back, save, y, n, submit, help;
+    private JButton select, dMovie, aMovie, back, save, y, n;
     public JPanel lib, add, img, st, desc, login, aDesc;
     public JFrame yn;
-    private JTextField nameText, yearText, genreText, ratingText, searchText, imageText, usernameText;
+    private JTextField nameText, yearText, genreText, ratingText, searchText, imageText;
     public JTextArea word, descriptionText;
     public JTable table, tableMaster;
-    public JLabel message, ynText, welcome, sortMessage;
+    public JLabel message, ynText, sortMessage;
     public DefaultTableModel model, modelMaster;
-    public JPasswordField p;
     public int start, MAX;
     String input, movName, movYear, movGenre, movRating, movDescription, movImagepath;
     String[][] data;
@@ -45,17 +44,17 @@ public class IMBA extends JFrame {
         setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         buttons();
+        libraryRun();
         setVisible(true);
     }
     
-    // Method called once enter is pressed
+    // Method called when program starts
     private void libraryRun() {
         // Set visibility of buttons
-        enter.setVisible(false);
         select.setVisible(true);
-        search.setVisible(true);
         aMovie.setVisible(true);
         dMovie.setVisible(true);
+        searchText.setVisible(true);
         
         MAX = 0;
 
@@ -76,6 +75,7 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(150, 200, 200, 200);
         add(lib, gbc);
+
         lib.setVisible(true);
         
         // Read data from file and store in array
@@ -188,19 +188,14 @@ public class IMBA extends JFrame {
 
     // Method called once add movie is pressed
     private void addRun(){
-	 	help.setVisible(false);
-        welcome.setVisible(false);
+        check = 1;
         sortMessage.setVisible(false);
-        enter.setVisible(false);
+        message.setVisible(false);
         select.setVisible(false);
-        search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
         back.setVisible(true);
-        submit.setVisible(false);
-        search.setVisible(false);
-        searchText.setVisible(false);
         st.setVisible(false);
     }
 
@@ -222,23 +217,35 @@ public class IMBA extends JFrame {
     // Removes visibility of some components
     private void fade(){
 	 	sortMessage.setVisible(false);
-	 	help.setVisible(false);
-        welcome.setVisible(false);
-        enter.setVisible(false);
+        message.setVisible(false);
         select.setVisible(false);
-        search.setVisible(false);
         aMovie.setVisible(false);
         dMovie.setVisible(false);
         lib.setVisible(false);
 		back.setVisible(true);
-        submit.setVisible(false);
-        search.setVisible(false);
-        searchText.setVisible(false);
         st.setVisible(false);
     }
 
+    private void returnBack(){
+        check = 0;
+        sortMessage.setVisible(true);
+        message.setVisible(false);
+        add.setVisible(false);
+        aDesc.setVisible(false);
+        back.setVisible(false);
+        img.setVisible(false);
+        save.setVisible(false);
+        st.setVisible(true);
+        searchText.setVisible(true); 
+        desc.setVisible(false);
+        word.setEditable(false);
+        ur.updateFile(movieFile, modelMaster);
+        libraryRun();
+   }
+
     // Builds the display for seeing details of movie
     private void buildDisplay(){
+        check = 1;
         desc.setVisible(true);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(110, 1, 1, 300);
@@ -316,52 +323,31 @@ public class IMBA extends JFrame {
         add.add(imageText, Integer.valueOf(1));
 		
         // Initialize components for searching for a movie
-		searchText = new JTextField(11);
+		searchText = new JTextField(23);
 		st = new JPanel();
-		st.setVisible(false);
+		st.setVisible(true);
 		st.add(searchText);
-
-        // Enter button functionality
-        enter = new JButton("Enter");
-        enter.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                isNull = false;
-					 String usernameT = usernameText.getText();
-                if (usernameT == null || usernameT.trim().isEmpty()){
-						 	isNull = true;}
-						  
-					if (!isNull){
-					 	help.setVisible(true);
-						sortMessage.setVisible(true);
-               	        welcome.setVisible(true);
-               	        welcome.setText("Welcome to IMBA, " + usernameT + "!");
-                	    login.setVisible(false);
-                	libraryRun();}
-            usernameText.setText("");
-				}
-        });
-        enter.setVisible(true);
 
         // Back button functionality
         back = new JButton("Back");
         back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                check = 0;
-				sortMessage.setVisible(true);
-				help.setVisible(true);
-                welcome.setVisible(true);
-                add.setVisible(false);
-                aDesc.setVisible(false);
-                back.setVisible(false);
-                img.setVisible(false);
-                save.setVisible(false);
-                message.setVisible(false);
-                desc.setVisible(false);
-                word.setEditable(false);
-                ur.updateFile(movieFile, modelMaster);
-                libraryRun();
+                returnBack();
             }
         });
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyReleased(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if ((e.getKeyCode() == KeyEvent.VK_ESCAPE) && (check == 1)) {
+                    returnBack();
+                }
+            }});
+        this.setFocusable(true);
+        this.requestFocusInWindow();
         back.setVisible(false);
 
         // Select button functionality
@@ -392,20 +378,7 @@ public class IMBA extends JFrame {
                 
             }
         });
-        select.setVisible(false);
-		
-        // Help button functionality
-		help = new JButton("Help");
-        help.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://sites.google.com/student.tdsb.on.ca/imba-culminating/tutorial"));
-                } catch (IOException | URISyntaxException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        help.setVisible(false);
+        select.setVisible(true);
 
         // Save button functionality
         save = new JButton("Save");
@@ -451,9 +424,8 @@ public class IMBA extends JFrame {
         });
         save.setVisible(false);
 
-        // Submit button functionality
-        submit = new JButton("Submit");
-        submit.addActionListener(new ActionListener() {
+        searchText.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 				String searchT = searchText.getText();
                 isNull = false;
@@ -498,20 +470,6 @@ public class IMBA extends JFrame {
                 searchText.setText("");
             }
         });
-        submit.setVisible(false);
-		
-        // Search button functionality
-        search = new JButton("Search");
-        search.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                    submit.setVisible(true);
-					search.setVisible(false);
-                    searchText.setVisible(true);
-					st.setVisible(true);
-					searchText.setText("");
-            }
-        });
-        search.setVisible(false);	 
 
         // Add movie button functionality
         aMovie = new JButton("Add Movie");
@@ -533,16 +491,11 @@ public class IMBA extends JFrame {
                 save.setVisible(true);		 
 		  }});
         
-        aMovie.setVisible(false);
+        aMovie.setVisible(true);
         dMovie = new JButton("Delete Movie");
-        dMovie.setVisible(false);
 
         // Initialize position of components on jframe
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(200, 1, 1, 1);
-        add(enter, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -551,28 +504,13 @@ public class IMBA extends JFrame {
 		  
 		gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(5, 1, 430, 760);
+        gbc.insets = new Insets(5, 1, 430, -650);
         add(st, gbc);
-		  
-		gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(1, 700, 430, 1);
-        add(help, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.insets = new Insets(250, 1, 1, 1);
         add(save, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(1, 1, 430, 760);
-        add(search, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(1, 1, 360, 760);
-        add(submit, gbc);
 	
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -588,30 +526,6 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(400, 1, 1, 800);
         add(back, gbc);
-        
-        // Initialize login jpanel with necessary components
-        login = new JPanel();
-        login.setLayout(new BoxLayout(login, BoxLayout.PAGE_AXIS));
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(70, 1, 1, 1);
-        add(login, gbc);
-
-        login.setVisible(true);
-        JLabel username = new JLabel("Username:");
-        username.setForeground(Color.BLACK);
-        login.add(username, Integer.valueOf(1));
-
-        usernameText = new JTextField(10);
-        login.add(usernameText, Integer.valueOf(1));
-
-        JLabel password = new JLabel("Password (optional):");
-        password.setForeground(Color.BLACK);
-        login.add(password, Integer.valueOf(1));
-
-        p = new JPasswordField("",6);
-        p.setEchoChar('*');
-        login.add(p);
 
         // Initialize yes/no jframe for when user attempts to delete a movie
         yn = new JFrame();
@@ -662,16 +576,7 @@ public class IMBA extends JFrame {
         add(message, gbc);
         message.setVisible(false);
         message.setForeground(Color.WHITE);
-		searchText.setVisible(false);
-
-        // Initialize welcome message
-        welcome = new JLabel();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(1, 200, 280, 200);
-        add(welcome, gbc);
-        welcome.setVisible(false);
-        welcome.setForeground(Color.WHITE);
+		searchText.setVisible(true);
 		
         // Initialize sort message above headings
 		sortMessage = new JLabel();
@@ -679,7 +584,7 @@ public class IMBA extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(1, 5, 220, 230);
         add(sortMessage, gbc);
-        sortMessage.setVisible(false);
+        sortMessage.setVisible(true);
         sortMessage.setForeground(Color.WHITE);
 		sortMessage.setText("Click a heading to sort the table by that attribute.");
     }
