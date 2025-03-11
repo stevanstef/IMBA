@@ -445,7 +445,6 @@ public class IMBA extends JFrame {
                         }
                     }
                     searchT = String.valueOf(c);
-                    System.out.println(searchT);
                     ur.updateFile(movieFile, modelMaster);
                     rows = rd.readFile(movieFile, MAX);
                     data = new String[rows.length][6];
