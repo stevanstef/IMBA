@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+
 import javax.swing.*;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
@@ -428,6 +430,16 @@ public class IMBA extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 				String searchT = searchText.getText();
+                char[] c = searchT.toCharArray();
+                c[0] = Character.toUpperCase(c[0]);
+                for(int i=1; i<c.length; i++){
+                    if(c[i-1] == ' ' ){
+                        c[i] = Character.toUpperCase(c[i]);
+                    }else{
+                        c[i] = Character.toLowerCase(c[i]);
+                    }
+                }
+                searchT = String.valueOf(c);
                 isNull = false;
                 if (searchT == null || searchT.trim().isEmpty()){
                     isNull = true;}
