@@ -430,21 +430,22 @@ public class IMBA extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 				String searchT = searchText.getText();
-                char[] c = searchT.toCharArray();
-                c[0] = Character.toUpperCase(c[0]);
-                for(int i=1; i<c.length; i++){
-                    if(c[i-1] == ' ' ){
-                        c[i] = Character.toUpperCase(c[i]);
-                    }else{
-                        c[i] = Character.toLowerCase(c[i]);
-                    }
-                }
-                searchT = String.valueOf(c);
                 isNull = false;
                 if (searchT == null || searchT.trim().isEmpty()){
                     isNull = true;}
 
 				if (!isNull){
+                    char[] c = searchT.toCharArray();
+                    c[0] = Character.toUpperCase(c[0]);
+                    for(int i=1; i<c.length; i++){
+                        if(c[i-1] == ' ' ){
+                            c[i] = Character.toUpperCase(c[i]);
+                        }else{
+                            c[i] = Character.toLowerCase(c[i]);
+                        }
+                    }
+                    searchT = String.valueOf(c);
+                    System.out.println(searchT);
                     ur.updateFile(movieFile, modelMaster);
                     rows = rd.readFile(movieFile, MAX);
                     data = new String[rows.length][6];
